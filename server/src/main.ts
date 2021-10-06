@@ -1,8 +1,11 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import {NestFactory} from '@nestjs/core';
+import {AppModule} from './app.module';
+import {ConnectionService} from './connection/connection.service';
 
 async function bootstrap() {
   const app = await NestFactory.createApplicationContext(AppModule);
-  await import('./server');
+  const connectionService = app.get(ConnectionService);
+  connectionService.connection.listen();
 }
+
 bootstrap();
