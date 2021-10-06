@@ -1,6 +1,6 @@
 {
-	"name": "lsp-sample-server",
-	"description": "Example implementation of a language server in node.",
+	"name": "fulibFeedback-language-server",
+	"description": "Language Server for fulibFeedback",
 	"version": "1.0.0",
 	"author": "Microsoft Corporation",
 	"license": "MIT",
@@ -9,7 +9,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/Microsoft/vscode-extension-samples"
+		"url": "https://github.com/fujaba/fulibFeedback"
 	},
 	"dependencies": {
 		"vscode-languageserver": "^7.0.0",
