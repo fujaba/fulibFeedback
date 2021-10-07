@@ -32,9 +32,9 @@ export function activate(context: ExtensionContext) {
 
   // Options to control the language client
   const clientOptions: LanguageClientOptions = {
-    // Register the server for plain text documents
     documentSelector: [
       {scheme: 'file', language: 'java'},
+      {scheme: 'file', language: 'markdown', pattern: '**/scenarios/**/*.md'},
     ],
     synchronize: {
       // Notify the server about file changes to '.clientrc files contained in the workspace
