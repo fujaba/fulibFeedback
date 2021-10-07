@@ -1,38 +1,30 @@
-# LSP Example
+# fulibFeedback
 
-Heavily documented sample code for https://code.visualstudio.com/api/language-extensions/language-server-extension-guide
+## General Plan
 
-## Functionality
+1. Fetch all PM assignment repos from sekassel and sekassel-archive
+2. Read through comments of Pull Requests, e.g.
 
-This Language Server works for plain text file. It has the following language features:
-- Completions
-- Diagnostics regenerated on each file change or configuration change
+    ```markdown
+    ClemensEmme commented on 18 Jan:
+    # Hausaufgabe 3 (56P/100P)
+    ## Aufgabe 1 (19P/60P)
+    ### Dungeon (7P/13P)
+    #### withEnemies
+    - Null nicht abgefangen (-1P)
+    ```
 
-It also includes an End-to-End test.
+   This yields the following info:
 
-## Structure
+   1. feedback author (GitHub username)
+   2. assignment number, total points
+   3. task number, subtotal
+   4. subtask, in this case class name
+   5. in this case method name
+   6. deduction with reason and points
 
-```
-.
-├── client // Language Client
-│   ├── src
-│   │   ├── test // End to End tests for Language Client / Server
-│   │   └── extension.ts // Language Client entry point
-├── package.json // The extension manifest.
-└── server // Language Server
-    └── src
-        └── server.ts // Language Server entry point
-```
+3. Find out how to map deductions to problems in code
+   > This requires some intelligence or at least a probabilistic approach that looks at multiple submissions with the same deductions and checks for simililarities.
 
-## Running the Sample
-
-- Run `npm install` in this folder. This installs all necessary npm modules in both the client and server folder
-- Open VS Code on this folder.
-- Press Ctrl+Shift+B to compile the client and server.
-- Switch to the Debug viewlet.
-- Select `Launch Client` from the drop down.
-- Run the launch config.
-- If you want to debug the server as well use the launch configuration `Attach to Server`
-- In the [Extension Development Host] instance of VSCode, open a document in 'plain text' language mode.
-  - Type `j` or `t` to see `Javascript` and `TypeScript` completion.
-  - Enter text content such as `AAA aaa BBB`. The extension will emit diagnostics for all words in all-uppercase.
+4. Check for similar issues in student's code - either live in their editor if permitted, or during grading.
+5. Add an interface for collecting feedback and generating PR comments in the format above.
