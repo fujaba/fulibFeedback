@@ -1,27 +1,27 @@
 {
-	"name": "fulibFeedback-vscode-client",
-	"description": "VSCode client for the fulibFeedback language server",
-	"author": "Adrian Kunz",
-	"license": "MIT",
-	"version": "0.0.1",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/fujaba/fulibFeedback"
-	},
+  "name": "fulibFeedback-vscode-client",
+  "description": "VSCode client for the fulibFeedback language server",
+  "author": "Adrian Kunz",
+  "license": "MIT",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fujaba/fulibFeedback"
+  },
   "scripts": {
     "build:watch": "tsc --watch"
   },
-	"engines": {
-		"vscode": "^1.52.0"
-	},
-	"dependencies": {
-		"glob": "^7.2.0",
-		"vscode-languageclient": "^7.0.0"
-	},
-	"devDependencies": {
+  "engines": {
+    "vscode": "^1.52.0"
+  },
+  "dependencies": {
+    "glob": "^7.2.0",
+    "vscode-languageclient": "^7.0.0"
+  },
+  "devDependencies": {
     "typescript": "^4.3.5",
-		"@types/glob": "^7.1.4",
-		"@types/vscode": "^1.52.0",
-		"@vscode/test-electron": "^1.6.1"
-	}
+    "@types/glob": "^7.1.4",
+    "@types/vscode": "^1.52.0",
+    "@vscode/test-electron": "^1.6.1"
+  }
 }

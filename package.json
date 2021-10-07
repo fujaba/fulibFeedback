@@ -1,47 +1,47 @@
 {
-	"name": "fulibFeedback-language",
-	"description": "Language support for fulibFeedback",
-	"author": "Adrian Kunz",
-	"license": "MIT",
-	"version": "1.0.0",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/fujaba/fulibFeedback"
-	},
-	"engines": {
-		"vscode": "^1.43.0"
-	},
-	"activationEvents": [
-		"onLanguage:java",
+  "name": "fulibFeedback-language",
+  "description": "Language support for fulibFeedback",
+  "author": "Adrian Kunz",
+  "license": "MIT",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fujaba/fulibFeedback"
+  },
+  "engines": {
+    "vscode": "^1.43.0"
+  },
+  "activationEvents": [
+    "onLanguage:java",
     "onLanguage:markdown"
-	],
-	"main": "./client/out/extension",
-	"contributes": {
-		"configuration": {
-			"type": "object",
-			"title": "fulibFeedback configuration",
-			"properties": {
-				"fulibFeedback.maxNumberOfProblems": {
-					"scope": "resource",
-					"type": "number",
-					"default": 100,
-					"description": "Controls the maximum number of problems produced by the server."
-				},
-				"fulibFeedback.trace.server": {
-					"scope": "window",
-					"type": "string",
-					"enum": [
-						"off",
-						"messages",
-						"verbose"
-					],
-					"default": "off",
-					"description": "Traces the communication between VS Code and the language server."
-				}
-			}
-		}
-	},
-	"scripts": {
-		"test": "sh ./scripts/e2e.sh"
-	}
+  ],
+  "main": "./client/out/extension",
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "fulibFeedback configuration",
+      "properties": {
+        "fulibFeedback.maxNumberOfProblems": {
+          "scope": "resource",
+          "type": "number",
+          "default": 100,
+          "description": "Controls the maximum number of problems produced by the server."
+        },
+        "fulibFeedback.trace.server": {
+          "scope": "window",
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "description": "Traces the communication between VS Code and the language server."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "test": "sh ./scripts/e2e.sh"
+  }
 }

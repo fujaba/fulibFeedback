@@ -1,16 +1,16 @@
 {
-	"name": "fulibFeedback-language-server",
-	"description": "Language Server for fulibFeedback",
-	"version": "1.0.0",
-	"author": "Microsoft Corporation",
-	"license": "MIT",
-	"engines": {
-		"node": "*"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/fujaba/fulibFeedback"
-	},
+  "name": "fulibFeedback-language-server",
+  "description": "Language Server for fulibFeedback",
+  "version": "1.0.0",
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "engines": {
+    "node": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fujaba/fulibFeedback"
+  },
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
