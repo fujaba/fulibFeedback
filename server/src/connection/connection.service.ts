@@ -1,4 +1,4 @@
-import {Injectable, OnModuleInit} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {
   _Connection,
   createConnection,
@@ -10,13 +10,13 @@ import {
 } from 'vscode-languageserver/node';
 
 @Injectable()
-export class ConnectionService implements OnModuleInit {
+export class ConnectionService {
   connection!: _Connection;
   hasConfigurationCapability!: boolean;
   hasWorkspaceFolderCapability!: boolean;
   hasDiagnosticRelatedInformationCapability!: boolean;
 
-  async onModuleInit() {
+  constructor() {
     this.connection = createConnection(ProposedFeatures.all);
     this.connection.onInitialize((params: InitializeParams) => {
       const capabilities = params.capabilities;

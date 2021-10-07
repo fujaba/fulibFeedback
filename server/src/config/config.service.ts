@@ -1,4 +1,4 @@
-import {Injectable, OnModuleInit} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {ConnectionService} from '../connection/connection.service';
 import {DocumentService} from '../document/document.service';
 import {Config} from './config';
@@ -8,7 +8,7 @@ export const DEFAULT_SETTINGS: Config = {
 };
 
 @Injectable()
-export class ConfigService implements OnModuleInit {
+export class ConfigService {
   globalSettings: Config = DEFAULT_SETTINGS;
   documentConfigs: Map<string, Thenable<Config>> = new Map();
 
@@ -16,9 +16,6 @@ export class ConfigService implements OnModuleInit {
     private documentService: DocumentService,
     private connectionService: ConnectionService,
   ) {
-  }
-
-  async onModuleInit() {
     this.connectionService.connection.onDidChangeConfiguration(change => {
       if (this.connectionService.hasConfigurationCapability) {
         this.documentConfigs.clear();

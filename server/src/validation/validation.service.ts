@@ -1,4 +1,4 @@
-import {Injectable, OnModuleInit} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {TextDocument} from 'vscode-languageserver-textdocument';
 import {Diagnostic, DiagnosticSeverity} from 'vscode-languageserver/node';
 import {ConfigService} from '../config/config.service';
@@ -6,15 +6,12 @@ import {ConnectionService} from '../connection/connection.service';
 import {DocumentService} from '../document/document.service';
 
 @Injectable()
-export class ValidationService implements OnModuleInit {
+export class ValidationService {
   constructor(
     private connectionService: ConnectionService,
     private documentService: DocumentService,
     private configService: ConfigService,
   ) {
-  }
-
-  async onModuleInit() {
     this.connectionService.connection.onDidChangeConfiguration(() => {
       this.documentService.documents.all().forEach(d => this.validateTextDocument(d));
     });
