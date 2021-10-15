@@ -1,4 +1,5 @@
 import {Injectable} from '@nestjs/common';
+import {DiagnosticRelatedInformation} from 'vscode-languageserver';
 import {TextDocument} from 'vscode-languageserver-textdocument';
 import {Diagnostic, DiagnosticSeverity} from 'vscode-languageserver/node';
 import {AssignmentsApiService} from '../assignments-api/assignments-api.service';
@@ -36,13 +37,20 @@ export class ValidationService {
           continue;
         }
 
+        const relatedInformation = this.connectionService.hasDiagnosticRelatedInformationCapability ? annotation.snippets.filter(other => other !== snippet).map((other): DiagnosticRelatedInformation => ({
+          location: {
+            uri: uri.slice(0, -snippet.file.length) + other.file,
+            range: {start: other.from, end: other.to},
+          },
+          message: snippet.comment,
+        })) : undefined;
         const diagnostic: Diagnostic = {
           message: `${annotation.remark}: ${snippet.comment}`,
           range: {start: snippet.from, end: snippet.to}, // TODO may not match any more
           source: 'Feedback',
           severity: DiagnosticSeverity.Warning,
           code: annotation.author,
-          // TODO relatedInformation: other snippets
+          relatedInformation,
         };
         diagnostics.push(diagnostic);
       }
