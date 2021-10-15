@@ -1,6 +1,7 @@
 import {HttpService} from '@nestjs/axios';
 import {Injectable} from '@nestjs/common';
 import {CodeAction, CodeActionParams} from 'vscode-languageserver';
+import {Snippet} from '../assignments-api/annotation';
 import {AssignmentsApiService} from '../assignments-api/assignments-api.service';
 import {ConfigService} from '../config/config.service';
 import {ConnectionService} from '../connection/connection.service';
@@ -41,18 +42,29 @@ export class ActionService {
     const {task, uri, solution, file, range} = params.data as any;
     const config = await this.configService.getDocumentConfig(uri);
     const document = this.documentService.documents.get(uri);
-    await this.assignmentsApiService.createAnnotation(config, solution, {
-      author: '',
-      remark: task.description,
-      points: task.points,
-      snippets: [{
-        file,
-        from: range.start,
-        to: range.end,
-        code: document?.getText(range) ?? '',
-        comment: '',
-      }],
-    });
+    const snippet: Snippet = {
+      file,
+      from: range.start,
+      to: range.end,
+      code: document?.getText(range) ?? '',
+      comment: '',
+    };
+
+    const existing = await this.assignmentsApiService.getAnnotations(config, solution, {remark: task.description});
+    if (existing.length) {
+      const first = existing[0];
+      await this.assignmentsApiService.updateAnnotation(config, solution, first._id, {
+        ...first,
+        snippets: [...first.snippets, snippet],
+      });
+    } else {
+      await this.assignmentsApiService.createAnnotation(config, solution, {
+        author: '',
+        remark: task.description,
+        points: task.points,
+        snippets: [snippet],
+      });
+    }
     return params;
   }
 }

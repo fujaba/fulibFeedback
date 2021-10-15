@@ -27,7 +27,7 @@ export class ValidationService {
     const config = await this.configService.getDocumentConfig(uri);
     const {github, file} = await this.assignmentsApiService.getFileAndGithub(config, uri);
     const solution = await this.assignmentsApiService.getSolution(config, github);
-    const annotations = await this.assignmentsApiService.getAnnotations(config, solution._id, file);
+    const annotations = await this.assignmentsApiService.getAnnotations(config, solution._id, {file});
 
     const diagnostics: Diagnostic[] = [];
     for (const annotation of annotations) {

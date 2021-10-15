@@ -53,11 +53,18 @@ export class AssignmentsApiService {
     return data;
   }
 
-  async getAnnotations(config: Config, solution: string, file: string): Promise<Annotation[]> {
+  async getAnnotations(config: Config, solution: string, params?: {remark?: string, file?: string}): Promise<Annotation[]> {
     const {data} = await firstValueFrom(this.httpService.get<Annotation[]>(`${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions/${solution}/annotations`, {
-      params: {
-        file,
+      params,
+      headers: {
+        'Assignment-Token': config.assignment.token,
       },
+    }));
+    return data;
+  }
+
+  async updateAnnotation(config: Config, solution: string, id: string, dto: Partial<AnnotationDto>): Promise<Annotation> {
+    const {data} = await firstValueFrom(this.httpService.patch<Annotation>(`${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions/${solution}/annotations/${id}`, dto, {
       headers: {
         'Assignment-Token': config.assignment.token,
       },
