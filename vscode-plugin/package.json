@@ -38,7 +38,12 @@
           "type": "string",
           "description": "The API server for annotations."
         },
-        "fulibFeedback.assignmentToken": {
+        "fulibFeedback.assignment.id": {
+          "scope": "window",
+          "type": "string",
+          "description": "The ID of the current assignment"
+        },
+        "fulibFeedback.assignment.token": {
           "scope": "window",
           "type": "string",
           "description": "The token for the current assignment"

@@ -1,5 +1,8 @@
 export interface Config {
   maxNumberOfProblems: number;
-  assignmentToken: string;
+  assignment: {
+    id: string;
+    token: string;
+  }
   apiServer: string;
 }
