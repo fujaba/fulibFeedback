@@ -53,7 +53,7 @@ export class AssignmentsApiService {
     return data;
   }
 
-  async getAnnotations(config: Config, solution: string, params?: {remark?: string, file?: string}): Promise<Annotation[]> {
+  async getAnnotations(config: Config, solution: string, params?: {task?: number, file?: string}): Promise<Annotation[]> {
     const {data} = await firstValueFrom(this.httpService.get<Annotation[]>(`${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions/${solution}/annotations`, {
       params,
       headers: {

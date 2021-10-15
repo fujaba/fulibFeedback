@@ -26,10 +26,11 @@ export class ActionService {
     const {assignment, github, file} = await this.assignmentsApiService.getFileAndGithub(config, uri);
     const solution = await this.assignmentsApiService.getSolution(config, github);
 
-    return assignment.tasks.flatMap((task): CodeAction[] => {
+    return assignment.tasks.flatMap((task, i): CodeAction[] => {
       const sharedData = {
         uri,
         file,
+        task: i,
         remark: task.description,
         range: params.range,
         solution: solution._id,
@@ -54,7 +55,7 @@ export class ActionService {
   }
 
   private async resolveAction(params: CodeAction): Promise<CodeAction> {
-    const {remark, points, uri, solution, file, range} = params.data as any;
+    const {task, remark, points, uri, solution, file, range} = params.data as any;
     const config = await this.configService.getDocumentConfig(uri);
     const document = this.documentService.documents.get(uri);
     const snippet: Snippet = {
@@ -65,17 +66,19 @@ export class ActionService {
       comment: '',
     };
 
-    const existing = await this.assignmentsApiService.getAnnotations(config, solution, {remark});
+    const existing = await this.assignmentsApiService.getAnnotations(config, solution, {task});
     if (existing.length) {
       const first = existing[0];
       await this.assignmentsApiService.updateAnnotation(config, solution, first._id, {
         ...first,
+        remark,
         points,
         snippets: [...first.snippets, snippet],
       });
     } else {
       await this.assignmentsApiService.createAnnotation(config, solution, {
         author: config.user.name,
+        task,
         remark,
         points,
         snippets: [snippet],

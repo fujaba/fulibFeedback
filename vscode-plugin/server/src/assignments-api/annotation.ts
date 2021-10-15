@@ -10,6 +10,7 @@ export interface Snippet {
 
 export interface Annotation {
   _id: string;
+  task: number;
   author: string;
   remark: string;
   points: number;
