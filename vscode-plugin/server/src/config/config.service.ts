@@ -5,6 +5,7 @@ import {Config} from './config';
 
 export const DEFAULT_SETTINGS: Config = {
   maxNumberOfProblems: 1000,
+  assignmentToken: '',
 };
 
 @Injectable()
@@ -20,7 +21,7 @@ export class ConfigService {
       if (this.connectionService.hasConfigurationCapability) {
         this.documentConfigs.clear();
       } else {
-        this.globalSettings = change.settings.languageServerExample as Config || DEFAULT_SETTINGS;
+        this.globalSettings = change.settings.fulibFeedback as Config || DEFAULT_SETTINGS;
       }
     });
 
