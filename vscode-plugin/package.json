@@ -2,12 +2,18 @@
   "name": "fulibFeedback-language",
   "description": "Language support for fulibFeedback",
   "author": "Adrian Kunz",
+  "publisher": "fujaba",
   "license": "MIT",
   "version": "1.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/fujaba/fulibFeedback"
   },
+  "categories": ["programming languages"],
+  "identity": {
+    "internalName": "org.fulib.feedback"
+  },
+  "overview": "./README.md",
   "engines": {
     "vscode": "^1.43.0"
   },
