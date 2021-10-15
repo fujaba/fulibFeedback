@@ -47,7 +47,7 @@ export class ValidationService {
             uri: uri.slice(0, -snippet.file.length) + other.file,
             range: {start: other.from, end: other.to},
           },
-          message: snippet.comment,
+          message: other.comment,
         })) : undefined;
 
         const diagnostic: Diagnostic = {
