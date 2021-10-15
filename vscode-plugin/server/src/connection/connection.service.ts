@@ -28,7 +28,9 @@ export class ConnectionService {
       const result: InitializeResult = {
         capabilities: {
           textDocumentSync: TextDocumentSyncKind.Incremental,
-          // Tell the client that this server supports code completion.
+          codeActionProvider: {
+            resolveProvider: true,
+          },
           completionProvider: {
             resolveProvider: true,
           },
