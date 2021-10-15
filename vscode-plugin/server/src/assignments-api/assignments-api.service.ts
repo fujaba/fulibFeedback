@@ -20,7 +20,7 @@ export class AssignmentsApiService {
     const slashIndex = uri.indexOf('/', prefixIndex + prefix.length);
     const github = uri.substring(prefixIndex + prefix.length + 1, slashIndex);
     const file = uri.substring(slashIndex + 1);
-    return {github, file};
+    return {assignment, github, file};
   }
 
   async getAssignment(config: Config): Promise<Assignment> {

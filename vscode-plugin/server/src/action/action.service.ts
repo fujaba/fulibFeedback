@@ -22,28 +22,29 @@ export class ActionService {
   private async provideActions(params: CodeActionParams): Promise<CodeAction[]> {
     const uri = params.textDocument.uri;
     const config = await this.configService.getDocumentConfig(uri);
-    const {github, file} = await this.assignmentsApiService.getFileAndGithub(config, uri);
+    const {assignment, github, file} = await this.assignmentsApiService.getFileAndGithub(config, uri);
     const solution = await this.assignmentsApiService.getSolution(config, github);
-    const action: CodeAction = {
-      title: 'Feedback',
+
+    return assignment.tasks.map((task): CodeAction => ({
+      title: `Feedback: ${task.description}`,
       data: {
         uri,
         file,
+        task,
         range: params.range,
         solution: solution._id,
       },
-    };
-    return [action];
+    }));
   }
 
   private async resolveAction(params: CodeAction): Promise<CodeAction> {
-    const {uri, solution, file, range} = params.data as any;
+    const {task, uri, solution, file, range} = params.data as any;
     const config = await this.configService.getDocumentConfig(uri);
     const document = this.documentService.documents.get(uri);
     await this.assignmentsApiService.createAnnotation(config, solution, {
       author: '',
-      remark: '',
-      points: 0,
+      remark: task.description,
+      points: task.points,
       snippets: [{
         file,
         from: range.start,
