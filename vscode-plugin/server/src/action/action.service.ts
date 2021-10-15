@@ -22,13 +22,8 @@ export class ActionService {
   private async provideActions(params: CodeActionParams): Promise<CodeAction[]> {
     const uri = params.textDocument.uri;
     const config = await this.configService.getDocumentConfig(uri);
-    const assignment = await this.assignmentsApiService.getAssignment(config);
-    const prefix = assignment.classroom.prefix;
-    const prefixIndex = uri.indexOf(prefix);
-    const slashIndex = uri.indexOf('/', prefixIndex + prefix.length);
-    const studentGithub = uri.substring(prefixIndex + prefix.length + 1, slashIndex);
-    const file = uri.substring(slashIndex + 1);
-    const solution = await this.assignmentsApiService.getSolution(config, studentGithub);
+    const {github, file} = await this.assignmentsApiService.getFileAndGithub(config, uri);
+    const solution = await this.assignmentsApiService.getSolution(config, github);
     const action: CodeAction = {
       title: 'Feedback',
       data: {
