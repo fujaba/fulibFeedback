@@ -45,7 +45,7 @@ export class ValidationService {
           message: snippet.comment,
         })) : undefined;
         const diagnostic: Diagnostic = {
-          message: `${annotation.remark}: ${snippet.comment} -${annotation.author}`,
+          message: `${annotation.remark}: ${snippet.comment} ~${annotation.author}`,
           range: {start: snippet.from, end: snippet.to}, // TODO may not match any more
           source: 'Feedback',
           severity: annotation.points === 0 ? DiagnosticSeverity.Error : DiagnosticSeverity.Information,

@@ -38,6 +38,11 @@
           "type": "string",
           "description": "The API server for annotations."
         },
+        "fulibFeedback.user.name": {
+          "scope": "application",
+          "type": "string",
+          "description": "Your name for display in annotations"
+        },
         "fulibFeedback.assignment.id": {
           "scope": "window",
           "type": "string",

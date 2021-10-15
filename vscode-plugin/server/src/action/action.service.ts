@@ -75,7 +75,7 @@ export class ActionService {
       });
     } else {
       await this.assignmentsApiService.createAnnotation(config, solution, {
-        author: '',
+        author: config.user.name,
         remark,
         points,
         snippets: [snippet],
