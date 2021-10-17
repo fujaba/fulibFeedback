@@ -8,7 +8,7 @@ import {ConfigService} from '../config/config.service';
 import {ConnectionService} from '../connection/connection.service';
 import {DocumentService} from '../document/document.service';
 
-const feedbackPattern = /\/\/ Feedback:(\d+):(\d+):(\d+)-(\d+):(\d+):Comment:(.*)/;
+export const feedbackPattern = /\/\/ Feedback:(\d+):(\d+):(\d+)-(\d+):(\d+):Comment:(.*)/;
 
 interface PrepareData {
   type: 'prepare';

@@ -1,7 +1,8 @@
 import {Injectable} from '@nestjs/common';
 import {DiagnosticRelatedInformation} from 'vscode-languageserver';
-import {TextDocument} from 'vscode-languageserver-textdocument';
+import {Range, TextDocument} from 'vscode-languageserver-textdocument';
 import {Diagnostic, DiagnosticSeverity} from 'vscode-languageserver/node';
+import {feedbackPattern} from '../action/action.service';
 import {Annotation, Snippet} from '../assignments-api/annotation';
 import {AssignmentsApiService} from '../assignments-api/assignments-api.service';
 import {ConfigService} from '../config/config.service';
@@ -36,9 +37,28 @@ export class ValidationService {
     }
 
     const diagnostics: Diagnostic[] = [];
+    this.addPendingFeedbackDiagnostics(document, diagnostics);
     this.addAnnotationDiagnostics(annotations, document, diagnostics);
 
     this.connectionService.connection.sendDiagnostics({uri, diagnostics});
+  }
+
+  private addPendingFeedbackDiagnostics(document: TextDocument, diagnostics: Diagnostic[]) {
+    const text = document.getText();
+    const pattern = new RegExp(feedbackPattern, 'g');
+    let match: RegExpExecArray | null;
+    while (match = pattern.exec(text)) {
+      const range: Range = {
+        start: document.positionAt(match.index),
+        end: document.positionAt(match.index + match[0].length),
+      };
+      diagnostics.push({
+        range,
+        severity: DiagnosticSeverity.Warning,
+        message: 'Unsubmitted Feedback\nEnter a comment and press Alt+Enter to submit the Feedback.',
+        source: 'Feedback',
+      });
+    }
   }
 
   private addAnnotationDiagnostics(annotations: Annotation[], document: TextDocument, diagnostics: Diagnostic[]) {
