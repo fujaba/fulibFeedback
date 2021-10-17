@@ -5,6 +5,9 @@ import {Config} from './config';
 
 export const DEFAULT_SETTINGS: Config = {
   maxNumberOfProblems: 1000,
+  user: {
+    name: '',
+  },
   assignment: {
     id: '',
     token: '',
