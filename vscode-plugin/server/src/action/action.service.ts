@@ -1,6 +1,6 @@
 import {HttpService} from '@nestjs/axios';
 import {Injectable} from '@nestjs/common';
-import {CodeAction, CodeActionParams} from 'vscode-languageserver';
+import {CodeAction, CodeActionParams, WorkspaceEdit} from 'vscode-languageserver';
 import {Position, Range} from 'vscode-languageserver-textdocument';
 import {Snippet} from '../assignments-api/annotation';
 import {AssignmentsApiService} from '../assignments-api/assignments-api.service';
@@ -33,6 +33,12 @@ interface SubmitData {
     to: Position;
     comment: string;
   };
+}
+
+interface CancelData {
+  type: 'cancel';
+  uri: string;
+  currentLine: number;
 }
 
 @Injectable()
@@ -82,11 +88,20 @@ export class ActionService {
           comment: comment.trim(),
         },
       };
-      const action: CodeAction = {
-        title: 'Submit Feedback',
-        data,
-      };
-      return [action];
+      return [
+        {
+          title: 'Submit Feedback',
+          data,
+        },
+        {
+          title: 'Cancel Feedback',
+          data: {
+            type: 'cancel',
+            uri,
+            currentLine: range.start.line,
+          },
+        },
+      ];
     }
 
     return assignment.tasks.map((task, i): CodeAction => ({
@@ -116,6 +131,8 @@ export class ActionService {
         return this.resolvePrepareAction(params);
       case 'submit':
         return this.resolveSubmitAction(params);
+      case 'cancel':
+        return this.resolveCancelAction(params);
     }
     return params;
   }
@@ -137,15 +154,7 @@ export class ActionService {
 
   private async resolveSubmitAction(params: CodeAction): Promise<CodeAction> {
     const {uri, currentLine} = params.data as SubmitData;
-    params.edit = {
-      documentChanges: [{
-        textDocument: {uri, version: null},
-        edits: [{
-          range: this.lineToRange(currentLine),
-          newText: '',
-        }],
-      }],
-    };
+    params.edit = this.createDeleteLineEdit(uri, currentLine);
 
     const {solution, snippet: snippetBase, annotation: annotationBase} = params.data as SubmitData;
     const config = await this.configService.getDocumentConfig(uri);
@@ -173,5 +182,23 @@ export class ActionService {
       });
     }
     return params;
+  }
+
+  private resolveCancelAction(params: CodeAction): CodeAction {
+    const {uri, currentLine} = params.data as CancelData;
+    params.edit = this.createDeleteLineEdit(uri, currentLine);
+    return params;
+  }
+
+  private createDeleteLineEdit(uri: string, line: number): WorkspaceEdit {
+    return {
+      documentChanges: [{
+        textDocument: {uri, version: null},
+        edits: [{
+          range: this.lineToRange(line),
+          newText: '',
+        }],
+      }],
+    };
   }
 }
