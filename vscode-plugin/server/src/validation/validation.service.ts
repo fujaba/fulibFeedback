@@ -2,7 +2,7 @@ import {Injectable} from '@nestjs/common';
 import {DiagnosticRelatedInformation} from 'vscode-languageserver';
 import {TextDocument} from 'vscode-languageserver-textdocument';
 import {Diagnostic, DiagnosticSeverity} from 'vscode-languageserver/node';
-import {Snippet} from '../assignments-api/annotation';
+import {Annotation, Snippet} from '../assignments-api/annotation';
 import {AssignmentsApiService} from '../assignments-api/assignments-api.service';
 import {ConfigService} from '../config/config.service';
 import {ConnectionService} from '../connection/connection.service';
@@ -36,33 +36,42 @@ export class ValidationService {
     }
 
     const diagnostics: Diagnostic[] = [];
+    this.addAnnotationDiagnostics(annotations, document, diagnostics);
+
+    this.connectionService.connection.sendDiagnostics({uri, diagnostics});
+  }
+
+  private addAnnotationDiagnostics(annotations: Annotation[], document: TextDocument, diagnostics: Diagnostic[]) {
+    const {uri} = document;
     for (const annotation of annotations) {
       for (const snippet of annotation.snippets) {
         if (!uri.endsWith(snippet.file)) {
           continue;
         }
 
-        const relatedInformation = this.connectionService.hasDiagnosticRelatedInformationCapability ? annotation.snippets.filter(other => other !== snippet).map((other): DiagnosticRelatedInformation => ({
-          location: {
-            uri: uri.slice(0, -snippet.file.length) + other.file,
-            range: {start: other.from, end: other.to},
-          },
-          message: other.comment,
-        })) : undefined;
-
-        const diagnostic: Diagnostic = {
-          message: `${annotation.remark}: ${snippet.comment} ~${annotation.author}`,
-          range: this.findRange(document, snippet),
-          source: 'Feedback',
-          severity: annotation.points === 0 ? DiagnosticSeverity.Error : DiagnosticSeverity.Information,
-          code: annotation.points + 'P',
-          relatedInformation,
-        };
-        diagnostics.push(diagnostic);
+        diagnostics.push(this.createSnippetDiagnostic(annotation, snippet, document));
       }
     }
+  }
 
-    this.connectionService.connection.sendDiagnostics({uri, diagnostics});
+  private createSnippetDiagnostic(annotation: Annotation, snippet: Snippet, document: TextDocument) {
+    const relatedInformation = this.connectionService.hasDiagnosticRelatedInformationCapability ? annotation.snippets.filter(other => other !== snippet).map((other): DiagnosticRelatedInformation => ({
+      location: {
+        uri: document.uri.slice(0, -snippet.file.length) + other.file,
+        range: {start: other.from, end: other.to},
+      },
+      message: other.comment,
+    })) : undefined;
+
+    const diagnostic: Diagnostic = {
+      message: `${annotation.remark}: ${snippet.comment} ~${annotation.author}`,
+      range: this.findRange(document, snippet),
+      source: 'Feedback',
+      severity: annotation.points === 0 ? DiagnosticSeverity.Error : DiagnosticSeverity.Information,
+      code: annotation.points + 'P',
+      relatedInformation,
+    };
+    return diagnostic;
   }
 
   private findRange(document: TextDocument, snippet: Snippet) {
