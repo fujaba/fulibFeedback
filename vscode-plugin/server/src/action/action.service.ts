@@ -161,7 +161,11 @@ export class ActionService {
     const document = this.documentService.documents.get(uri);
     const snippet: Snippet = {
       ...snippetBase,
-      code: document?.getText({start: snippetBase.from, end: snippetBase.to}) ?? '',
+      code: document?.getText({
+        // line numbers need to be shifted by one because the 'Feedback:' line is still there
+        start: {line: snippetBase.from.line + 1, character: snippetBase.from.character},
+        end: {line: snippetBase.to.line + 1, character: snippetBase.to.character},
+      }) ?? '',
     };
 
     const existing = await this.assignmentsApiService.getAnnotations(config, solution, {
