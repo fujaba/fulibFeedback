@@ -1,11 +1,39 @@
 import {HttpService} from '@nestjs/axios';
 import {Injectable} from '@nestjs/common';
 import {CodeAction, CodeActionParams} from 'vscode-languageserver';
+import {Position, Range} from 'vscode-languageserver-textdocument';
 import {Snippet} from '../assignments-api/annotation';
 import {AssignmentsApiService} from '../assignments-api/assignments-api.service';
 import {ConfigService} from '../config/config.service';
 import {ConnectionService} from '../connection/connection.service';
 import {DocumentService} from '../document/document.service';
+
+const feedbackPattern = /\/\/ Feedback:(\d+):(\d+):(\d+)-(\d+):(\d+):Comment:(.*)/;
+
+interface PrepareData {
+  type: 'prepare';
+  uri: string;
+  task: number;
+  range: Range;
+}
+
+interface SubmitData {
+  type: 'submit';
+  uri: string;
+  currentLine: number;
+  solution: string;
+  annotation: {
+    remark: string;
+    points: number;
+    task: number;
+  };
+  snippet: {
+    file: string;
+    from: Position;
+    to: Position;
+    comment: string;
+  };
+}
 
 @Injectable()
 export class ActionService {
@@ -24,63 +52,123 @@ export class ActionService {
     const uri = params.textDocument.uri;
     const config = await this.configService.getDocumentConfig(uri);
     const {assignment, github, file} = await this.assignmentsApiService.getFileAndGithub(config, uri);
-    const solution = await this.assignmentsApiService.getSolution(config, github);
+    const range = params.range;
+    const document = this.documentService.documents.get(uri);
+    if (!document) {
+      return [];
+    }
 
-    return assignment.tasks.flatMap((task, i): CodeAction[] => {
-      const sharedData = {
+    const currentLine: Range = this.lineToRange(range.start.line);
+    const line = document.getText(currentLine);
+    const match = feedbackPattern.exec(line);
+
+    if (match) {
+      const solution = await this.assignmentsApiService.getSolution(config, github);
+      const [, taskIndex, startLine, startChar, endLine, endChar, comment] = match;
+      const data: SubmitData = {
+        type: 'submit',
         uri,
-        file,
-        task: i,
-        remark: task.description,
-        range: params.range,
+        currentLine: range.start.line,
         solution: solution._id,
+        annotation: {
+          task: +taskIndex,
+          remark: assignment.tasks[+taskIndex].description,
+          points: 0,
+        },
+        snippet: {
+          file,
+          from: {line: +startLine, character: +startChar},
+          to: {line: +endLine, character: +endChar},
+          comment: comment.trim(),
+        },
       };
-      return [
-        {
-          title: `✅ Feedback: ${task.description} (${task.points}P)`,
-          data: {
-            ...sharedData,
-            points: task.points,
-          },
-        },
-        {
-          title: `⛔️ Feedback: ${task.description} (0P)`,
-          data: {
-            ...sharedData,
-            points: 0,
-          },
-        },
-      ];
-    });
+      const action: CodeAction = {
+        title: 'Submit Feedback',
+        data,
+      };
+      return [action];
+    }
+
+    return assignment.tasks.map((task, i): CodeAction => ({
+      title: `Feedback: ${task.description} (${task.points}P)`,
+      data: {
+        type: 'prepare',
+        task: i,
+        uri,
+        range,
+      } as PrepareData,
+    }));
+  }
+
+  private lineToRange(line: number): Range {
+    return {
+      start: {line, character: 0},
+      end: {line: line + 1, character: 0},
+    };
   }
 
   private async resolveAction(params: CodeAction): Promise<CodeAction> {
-    const {task, remark, points, uri, solution, file, range} = params.data as any;
+    if (!params.data || !('type' in (params.data as any))) {
+      return params;
+    }
+    switch ((params.data as any).type) {
+      case 'prepare':
+        return this.resolvePrepareAction(params);
+      case 'submit':
+        return this.resolveSubmitAction(params);
+    }
+    return params;
+  }
+
+  private async resolvePrepareAction(params: CodeAction): Promise<CodeAction> {
+    const {task, uri, range} = params.data as PrepareData;
+    const pos: Position = {line: range.start.line, character: 0};
+    params.edit = {
+      documentChanges: [{
+        textDocument: {uri, version: null},
+        edits: [{
+          range: {start: pos, end: pos},
+          newText: `// Feedback:${task}:${range.start.line}:${range.start.character}-${range.end.line}:${range.end.character}:Comment: \n`,
+        }],
+      }],
+    };
+    return params;
+  }
+
+  private async resolveSubmitAction(params: CodeAction): Promise<CodeAction> {
+    const {uri, currentLine} = params.data as SubmitData;
+    params.edit = {
+      documentChanges: [{
+        textDocument: {uri, version: null},
+        edits: [{
+          range: this.lineToRange(currentLine),
+          newText: '',
+        }],
+      }],
+    };
+
+    const {solution, snippet: snippetBase, annotation: annotationBase} = params.data as SubmitData;
     const config = await this.configService.getDocumentConfig(uri);
     const document = this.documentService.documents.get(uri);
     const snippet: Snippet = {
-      file,
-      from: range.start,
-      to: range.end,
-      code: document?.getText(range) ?? '',
-      comment: '',
+      ...snippetBase,
+      code: document?.getText({start: snippetBase.from, end: snippetBase.to}) ?? '',
     };
 
-    const existing = await this.assignmentsApiService.getAnnotations(config, solution, {task});
+    const existing = await this.assignmentsApiService.getAnnotations(config, solution, {
+      task: annotationBase.task,
+    });
     if (existing.length) {
       const first = existing[0];
       await this.assignmentsApiService.updateAnnotation(config, solution, first._id, {
         ...first,
-        remark,
-        points,
+        ...annotationBase,
         snippets: [...first.snippets, snippet],
       });
     } else {
       await this.assignmentsApiService.createAnnotation(config, solution, {
+        ...annotationBase,
         author: config.user.name,
-        task,
-        remark,
-        points,
         snippets: [snippet],
       });
     }
