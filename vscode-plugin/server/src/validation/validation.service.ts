@@ -90,6 +90,13 @@ export class ValidationService {
       severity: annotation.points === 0 ? DiagnosticSeverity.Error : DiagnosticSeverity.Information,
       code: annotation.points + 'P',
       relatedInformation,
+      // TODO not necessary when fetching annotations/snippets in ActionService
+      data: {
+        assignment: annotation.assignment,
+        solution: annotation.solution,
+        annotation: annotation._id,
+        snippet: annotation.snippets.indexOf(snippet),
+      },
     };
     return diagnostic;
   }

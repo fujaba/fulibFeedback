@@ -41,6 +41,15 @@ interface CancelData {
   currentLine: number;
 }
 
+interface DeleteData {
+  type: 'delete';
+  uri: string;
+  assignment: string;
+  solution: string;
+  annotation: string;
+  snippet: number;
+}
+
 @Injectable()
 export class ActionService {
   constructor(
@@ -56,20 +65,20 @@ export class ActionService {
 
   private async provideActions(params: CodeActionParams): Promise<CodeAction[]> {
     const uri = params.textDocument.uri;
-    const config = await this.configService.getDocumentConfig(uri);
-    const {assignment, github, file} = await this.assignmentsApiService.getFileAndGithub(config, uri);
-    const range = params.range;
     const document = this.documentService.documents.get(uri);
     if (!document) {
       return [];
     }
 
+    const config = await this.configService.getDocumentConfig(uri);
+    const {assignment, github, file} = await this.assignmentsApiService.getFileAndGithub(config, uri);
+    const solution = await this.assignmentsApiService.getSolution(config, github);
+    const range = params.range;
     const currentLine: Range = this.lineToRange(range.start.line);
     const line = document.getText(currentLine);
     const match = feedbackPattern.exec(line);
 
     if (match) {
-      const solution = await this.assignmentsApiService.getSolution(config, github);
       const [, taskIndex, startLine, startChar, endLine, endChar, comment] = match;
       const data: SubmitData = {
         type: 'submit',
@@ -104,6 +113,22 @@ export class ActionService {
       ];
     }
 
+    // TODO: It's better to fetch the overlapping annotations/snippets ourselves
+    //       because the diagnostics may not be up-to-date
+    const diagnostics = params.context.diagnostics.filter(d => d.data);
+    if (diagnostics.length) {
+      return diagnostics.map(d => {
+        return {
+          title: 'Delete Snippet',
+          data: {
+            type: 'delete',
+            uri,
+            ...(d.data as any),
+          },
+        };
+      })
+    }
+
     return assignment.tasks.map((task, i): CodeAction => ({
       title: `Feedback: ${task.description} (${task.points}P)`,
       data: {
@@ -133,6 +158,8 @@ export class ActionService {
         return this.resolveSubmitAction(params);
       case 'cancel':
         return this.resolveCancelAction(params);
+      case 'delete':
+        return this.resolveDeleteAction(params);
     }
     return params;
   }
@@ -204,5 +231,16 @@ export class ActionService {
         }],
       }],
     };
+  }
+
+  private async resolveDeleteAction(action: CodeAction): Promise<CodeAction> {
+    const {uri, solution, annotation, snippet} = action.data as DeleteData;
+    const config = await this.configService.getDocumentConfig(uri);
+    const existing = await this.assignmentsApiService.getAnnotation(config, solution, annotation);
+    existing.snippets.splice(snippet, 1);
+    await this.assignmentsApiService.updateAnnotation(config, solution, annotation, {
+      snippets: existing.snippets,
+    });
+    return action;
   }
 }
