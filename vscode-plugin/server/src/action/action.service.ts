@@ -25,7 +25,7 @@ interface SubmitData {
   annotation: {
     remark: string;
     points: number;
-    task: number;
+    task: string;
   };
   snippet: {
     file: string;
@@ -79,15 +79,15 @@ export class ActionService {
     const match = feedbackPattern.exec(line);
 
     if (match) {
-      const [, taskIndex, startLine, startChar, endLine, endChar, comment] = match;
+      const [, taskId, startLine, startChar, endLine, endChar, comment] = match;
       const data: SubmitData = {
         type: 'submit',
         uri,
         currentLine: range.start.line,
         solution: solution._id,
         annotation: {
-          task: +taskIndex,
-          remark: assignment.tasks[+taskIndex].description,
+          task: taskId,
+          remark: assignment.tasks.find(t => t._id === taskId)?.description ?? '',
           points: 0,
         },
         snippet: {

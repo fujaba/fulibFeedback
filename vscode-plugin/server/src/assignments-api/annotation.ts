@@ -12,7 +12,7 @@ export interface Annotation {
   assignment: string;
   solution: string;
   _id: string;
-  task: number;
+  task: string;
   author: string;
   remark: string;
   points: number;
