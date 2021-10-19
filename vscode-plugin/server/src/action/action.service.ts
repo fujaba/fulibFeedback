@@ -3,6 +3,7 @@ import {Injectable} from '@nestjs/common';
 import {CodeAction, CodeActionParams, WorkspaceEdit} from 'vscode-languageserver';
 import {Position, Range} from 'vscode-languageserver-textdocument';
 import {Snippet} from '../assignments-api/annotation';
+import {Task} from '../assignments-api/assignment';
 import {AssignmentsApiService} from '../assignments-api/assignments-api.service';
 import {ConfigService} from '../config/config.service';
 import {ConnectionService} from '../connection/connection.service';
@@ -13,7 +14,7 @@ export const feedbackPattern = /\/\/ Feedback:(\d+):(\d+):(\d+)-(\d+):(\d+):Comm
 interface PrepareData {
   type: 'prepare';
   uri: string;
-  task: number;
+  task: string;
   range: Range;
 }
 
@@ -129,15 +130,28 @@ export class ActionService {
       })
     }
 
-    return assignment.tasks.map((task, i): CodeAction => ({
-      title: `Feedback: ${task.description} (${task.points}P)`,
+    const actions: CodeAction[] = [];
+    this.addActions(assignment.tasks, uri, range, 0, actions);
+    return actions;
+  }
+
+  private addActions(tasks: Task[], uri: string, range: Range, depth: number, actions: CodeAction[]): void {
+    for (const task of tasks) {
+      actions.push(this.createAction(task, uri, range, depth));
+      this.addActions(task.children, uri, range, depth + 1, actions);
+    }
+  }
+
+  private createAction(task: Task, uri: string, range: Range, depth: number): CodeAction {
+    return {
+      title: `${depth ? '- ' + '\t'.repeat(depth) : 'Feedback:'} ${task.description} (${task.points}P)`,
       data: {
         type: 'prepare',
-        task: i,
+        task: task._id,
         uri,
         range,
       } as PrepareData,
-    }));
+    };
   }
 
   private lineToRange(line: number): Range {
