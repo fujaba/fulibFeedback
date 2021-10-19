@@ -80,6 +80,11 @@ export class ActionService {
 
     if (match) {
       const [, taskId, startLine, startChar, endLine, endChar, comment] = match;
+      const task = this.findTask(assignment.tasks, taskId);
+      if (!task) {
+        return [];
+      }
+
       const data: SubmitData = {
         type: 'submit',
         uri,
@@ -98,7 +103,17 @@ export class ActionService {
       };
       return [
         {
-          title: 'Submit Feedback',
+          title: `✅ Submit Feedback (${task.points}P)`,
+          data: {
+            ...data,
+            annotation: {
+              ...data.annotation,
+              points: task.points,
+            },
+          },
+        },
+        {
+          title: '⛔️ Submit Feedback (0P)',
           data,
         },
         {
@@ -131,6 +146,19 @@ export class ActionService {
     const actions: CodeAction[] = [];
     this.addActions(assignment.tasks, uri, range, 0, actions);
     return actions;
+  }
+
+  private findTask(tasks: Task[], id: string): Task | undefined {
+    for (let task of tasks) {
+      if (task._id === id) {
+        return task;
+      }
+      const subTask = this.findTask(task.children, id);
+      if (subTask) {
+        return subTask;
+      }
+    }
+    return undefined;
   }
 
   private addActions(tasks: Task[], uri: string, range: Range, depth: number, actions: CodeAction[]): void {
