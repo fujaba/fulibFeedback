@@ -4,6 +4,7 @@ import {Range, TextDocument} from 'vscode-languageserver-textdocument';
 import {Diagnostic, DiagnosticSeverity} from 'vscode-languageserver/node';
 import {feedbackPattern} from '../action/action.service';
 import {Annotation, Snippet} from '../assignments-api/annotation';
+import {Assignment, Task} from '../assignments-api/assignment';
 import {AssignmentsApiService} from '../assignments-api/assignments-api.service';
 import {ConfigService} from '../config/config.service';
 import {ConnectionService} from '../connection/connection.service';
@@ -28,7 +29,7 @@ export class ValidationService {
   async validateTextDocument(textDocument: TextDocument): Promise<void> {
     const uri = textDocument.uri;
     const config = await this.configService.getDocumentConfig(uri);
-    const {github, file} = await this.assignmentsApiService.getFileAndGithub(config, uri);
+    const {assignment, github, file} = await this.assignmentsApiService.getFileAndGithub(config, uri);
     const solution = await this.assignmentsApiService.getSolution(config, github);
     const annotations = await this.assignmentsApiService.getAnnotations(config, solution._id, {file});
     const document = this.documentService.documents.get(uri);
@@ -38,7 +39,7 @@ export class ValidationService {
 
     const diagnostics: Diagnostic[] = [];
     this.addPendingFeedbackDiagnostics(document, diagnostics);
-    this.addAnnotationDiagnostics(annotations, document, diagnostics);
+    this.addAnnotationDiagnostics(assignment, annotations, document, diagnostics);
 
     this.connectionService.connection.sendDiagnostics({uri, diagnostics});
   }
@@ -61,7 +62,7 @@ export class ValidationService {
     }
   }
 
-  private addAnnotationDiagnostics(annotations: Annotation[], document: TextDocument, diagnostics: Diagnostic[]) {
+  private addAnnotationDiagnostics(assignment: Assignment, annotations: Annotation[], document: TextDocument, diagnostics: Diagnostic[]) {
     const {uri} = document;
     for (const annotation of annotations) {
       for (const snippet of annotation.snippets) {
@@ -69,12 +70,12 @@ export class ValidationService {
           continue;
         }
 
-        diagnostics.push(this.createSnippetDiagnostic(annotation, snippet, document));
+        diagnostics.push(this.createSnippetDiagnostic(assignment, annotation, snippet, document));
       }
     }
   }
 
-  private createSnippetDiagnostic(annotation: Annotation, snippet: Snippet, document: TextDocument) {
+  private createSnippetDiagnostic(assignment: Assignment, annotation: Annotation, snippet: Snippet, document: TextDocument) {
     const relatedInformation = this.connectionService.hasDiagnosticRelatedInformationCapability ? annotation.snippets.filter(other => other !== snippet).map((other): DiagnosticRelatedInformation => ({
       location: {
         uri: document.uri.slice(0, -snippet.file.length) + other.file,
@@ -83,12 +84,12 @@ export class ValidationService {
       message: other.comment,
     })) : undefined;
 
+    const task = this.assignmentsApiService.findTask(assignment.tasks, annotation.task);
     const diagnostic: Diagnostic = {
-      // TODO include task description?
-      message: `${snippet.comment} ~${annotation.author}`,
+      message: `${task?.description}: ${snippet.comment} ~${annotation.author}`,
       range: this.findRange(document, snippet),
       source: 'Feedback',
-      severity: annotation.points === 0 ? DiagnosticSeverity.Error : DiagnosticSeverity.Information,
+      severity: task ? this.getSeverity(task, annotation) : DiagnosticSeverity.Warning,
       code: annotation.points + 'P',
       relatedInformation,
       // TODO not necessary when fetching annotations/snippets in ActionService
@@ -100,6 +101,19 @@ export class ValidationService {
       },
     };
     return diagnostic;
+  }
+
+  private getSeverity(task: Task, {points}: Annotation) {
+    const min = Math.min(task.points, 0);
+    const max = Math.max(task.points, 0);
+    switch (points) {
+      case min:
+        return DiagnosticSeverity.Error;
+      case max:
+        return DiagnosticSeverity.Information;
+      default:
+        return DiagnosticSeverity.Warning;
+    }
   }
 
   private findRange(document: TextDocument, snippet: Snippet) {

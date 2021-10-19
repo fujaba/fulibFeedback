@@ -4,7 +4,7 @@ import {AxiosRequestConfig} from 'axios';
 import {firstValueFrom} from 'rxjs';
 import {Config} from '../config/config';
 import {Annotation, AnnotationDto} from './annotation';
-import {Assignment} from './assignment';
+import {Assignment, Task} from './assignment';
 import {Solution} from './solution';
 
 @Injectable()
@@ -22,6 +22,19 @@ export class AssignmentsApiService {
     const github = uri.substring(prefixIndex + prefix.length + 1, slashIndex);
     const file = uri.substring(slashIndex + 1);
     return {assignment, github, file};
+  }
+
+  findTask(tasks: Task[], id: string): Task | undefined {
+    for (const task of tasks) {
+      if (task._id === id) {
+        return task;
+      }
+      const subTask = this.findTask(task.children, id);
+      if (subTask) {
+        return subTask;
+      }
+    }
+    return undefined;
   }
 
   async getAssignment(config: Config): Promise<Assignment> {
