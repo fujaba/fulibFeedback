@@ -24,7 +24,6 @@ interface SubmitData {
   currentLine: number;
   solution: string;
   annotation: {
-    remark: string;
     points: number;
     task: string;
   };
@@ -88,7 +87,6 @@ export class ActionService {
         solution: solution._id,
         annotation: {
           task: taskId,
-          remark: assignment.tasks.find(t => t._id === taskId)?.description ?? '',
           points: 0,
         },
         snippet: {

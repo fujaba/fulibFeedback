@@ -14,7 +14,6 @@ export interface Annotation {
   _id: string;
   task: string;
   author: string;
-  remark: string;
   points: number;
   snippets: Snippet[];
 }

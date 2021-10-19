@@ -84,7 +84,8 @@ export class ValidationService {
     })) : undefined;
 
     const diagnostic: Diagnostic = {
-      message: `${annotation.remark}: ${snippet.comment} ~${annotation.author}`,
+      // TODO include task description?
+      message: `${snippet.comment} ~${annotation.author}`,
       range: this.findRange(document, snippet),
       source: 'Feedback',
       severity: annotation.points === 0 ? DiagnosticSeverity.Error : DiagnosticSeverity.Information,
