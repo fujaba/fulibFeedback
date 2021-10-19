@@ -31,6 +31,12 @@ export class AssignmentsApiService {
   }
 
   async getSolution(config: Config, github: string): Promise<Solution> {
+    if (config.solution.id) {
+      return this.http<Solution>('GET', `${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions/${config.solution.id}`, undefined, {
+        headers: this.getHeaders(config),
+      });
+    }
+
     const all = await this.http<Solution[]>('GET', `${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions`, undefined, {
       params: {
         'author.github': github,
@@ -84,6 +90,9 @@ export class AssignmentsApiService {
     const result: Record<string, string> = {};
     if (config.assignment.token) {
       result['Assignment-Token'] = config.assignment.token;
+    }
+    if (config.solution.token) {
+      result['Solution-Token'] = config.solution.token;
     }
     return result;
   }

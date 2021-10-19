@@ -71,6 +71,10 @@ export class ActionService {
     }
 
     const config = await this.configService.getDocumentConfig(uri);
+    if (!config.assignment.token) {
+      return [];
+    }
+
     const {assignment, github, file} = await this.assignmentsApiService.getFileAndGithub(config, uri);
     const solution = await this.assignmentsApiService.getSolution(config, github);
     const range = params.range;
