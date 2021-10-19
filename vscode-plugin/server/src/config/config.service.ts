@@ -12,6 +12,10 @@ export const DEFAULT_SETTINGS: Config = {
     id: '',
     token: '',
   },
+  solution: {
+    id: '',
+    token: '',
+  },
   apiServer: '',
 };
 

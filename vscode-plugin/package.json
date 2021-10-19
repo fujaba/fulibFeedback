@@ -53,6 +53,16 @@
           "type": "string",
           "description": "The token for the current assignment"
         },
+        "fulibFeedback.solution.id": {
+          "scope": "window",
+          "type": "string",
+          "description": "The ID of the current solution"
+        },
+        "fulibFeedback.solution.token": {
+          "scope": "window",
+          "type": "string",
+          "description": "The token for the current solution"
+        },
         "fulibFeedback.trace.server": {
           "scope": "window",
           "type": "string",
