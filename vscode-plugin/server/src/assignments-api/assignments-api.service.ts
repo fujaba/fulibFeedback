@@ -1,6 +1,6 @@
 import {HttpService} from '@nestjs/axios';
 import {Injectable} from '@nestjs/common';
-import {AxiosRequestConfig} from 'axios';
+import {AxiosRequestConfig, Method} from 'axios';
 import {firstValueFrom} from 'rxjs';
 import {Config} from '../config/config';
 import {Evaluation, EvaluationDto} from './evaluation';
@@ -84,7 +84,7 @@ export class AssignmentsApiService {
     });
   }
 
-  private async http<T>(method: string, url: string, body?: any, options?: AxiosRequestConfig): Promise<T> {
+  private async http<T>(method: Method, url: string, body?: any, options?: AxiosRequestConfig): Promise<T> {
     try {
       const {data} = await firstValueFrom(this.httpService.request({
         ...options,
