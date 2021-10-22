@@ -3,7 +3,7 @@ import {DiagnosticRelatedInformation} from 'vscode-languageserver';
 import {Range, TextDocument} from 'vscode-languageserver-textdocument';
 import {Diagnostic, DiagnosticSeverity} from 'vscode-languageserver/node';
 import {feedbackPattern} from '../action/action.service';
-import {Annotation, Snippet} from '../assignments-api/annotation';
+import {Evaluation, Snippet} from '../assignments-api/evaluation';
 import {Assignment, Task} from '../assignments-api/assignment';
 import {AssignmentsApiService} from '../assignments-api/assignments-api.service';
 import {ConfigService} from '../config/config.service';
@@ -31,7 +31,7 @@ export class ValidationService {
     const config = await this.configService.getDocumentConfig(uri);
     const {assignment, github, file} = await this.assignmentsApiService.getFileAndGithub(config, uri);
     const solution = await this.assignmentsApiService.getSolution(config, github);
-    const annotations = await this.assignmentsApiService.getAnnotations(config, solution._id, {file});
+    const evaluations = await this.assignmentsApiService.getEvaluations(config, solution._id, {file});
     const document = this.documentService.documents.get(uri);
     if (!document) {
       return;
@@ -39,7 +39,7 @@ export class ValidationService {
 
     const diagnostics: Diagnostic[] = [];
     this.addPendingFeedbackDiagnostics(document, diagnostics);
-    this.addAnnotationDiagnostics(assignment, annotations, document, diagnostics);
+    this.addEvaluationDiagnostics(assignment, evaluations, document, diagnostics);
 
     this.connectionService.connection.sendDiagnostics({uri, diagnostics});
   }
@@ -62,21 +62,21 @@ export class ValidationService {
     }
   }
 
-  private addAnnotationDiagnostics(assignment: Assignment, annotations: Annotation[], document: TextDocument, diagnostics: Diagnostic[]) {
+  private addEvaluationDiagnostics(assignment: Assignment, evaluations: Evaluation[], document: TextDocument, diagnostics: Diagnostic[]) {
     const {uri} = document;
-    for (const annotation of annotations) {
-      for (const snippet of annotation.snippets) {
+    for (const evaluation of evaluations) {
+      for (const snippet of evaluation.snippets) {
         if (!uri.endsWith(snippet.file)) {
           continue;
         }
 
-        diagnostics.push(this.createSnippetDiagnostic(assignment, annotation, snippet, document));
+        diagnostics.push(this.createSnippetDiagnostic(assignment, evaluation, snippet, document));
       }
     }
   }
 
-  private createSnippetDiagnostic(assignment: Assignment, annotation: Annotation, snippet: Snippet, document: TextDocument) {
-    const relatedInformation = this.connectionService.hasDiagnosticRelatedInformationCapability ? annotation.snippets.filter(other => other !== snippet).map((other): DiagnosticRelatedInformation => ({
+  private createSnippetDiagnostic(assignment: Assignment, evaluation: Evaluation, snippet: Snippet, document: TextDocument) {
+    const relatedInformation = this.connectionService.hasDiagnosticRelatedInformationCapability ? evaluation.snippets.filter(other => other !== snippet).map((other): DiagnosticRelatedInformation => ({
       location: {
         uri: document.uri.slice(0, -snippet.file.length) + other.file,
         range: {start: other.from, end: other.to},
@@ -84,26 +84,26 @@ export class ValidationService {
       message: other.comment,
     })) : undefined;
 
-    const task = this.assignmentsApiService.findTask(assignment.tasks, annotation.task);
+    const task = this.assignmentsApiService.findTask(assignment.tasks, evaluation.task);
     const diagnostic: Diagnostic = {
-      message: `${task?.description}: ${snippet.comment} ~${annotation.author}`,
+      message: `${task?.description}: ${snippet.comment} ~${evaluation.author}`,
       range: this.findRange(document, snippet),
       source: 'Feedback',
-      severity: task ? this.getSeverity(task, annotation) : DiagnosticSeverity.Warning,
-      code: annotation.points + 'P',
+      severity: task ? this.getSeverity(task, evaluation) : DiagnosticSeverity.Warning,
+      code: evaluation.points + 'P',
       relatedInformation,
-      // TODO not necessary when fetching annotations/snippets in ActionService
+      // TODO not necessary when fetching evaluations/snippets in ActionService
       data: {
-        assignment: annotation.assignment,
-        solution: annotation.solution,
-        annotation: annotation._id,
-        snippet: annotation.snippets.indexOf(snippet),
+        assignment: evaluation.assignment,
+        solution: evaluation.solution,
+        evaluation: evaluation._id,
+        snippet: evaluation.snippets.indexOf(snippet),
       },
     };
     return diagnostic;
   }
 
-  private getSeverity(task: Task, {points}: Annotation) {
+  private getSeverity(task: Task, {points}: Evaluation) {
     const min = Math.min(task.points, 0);
     const max = Math.max(task.points, 0);
     switch (points) {

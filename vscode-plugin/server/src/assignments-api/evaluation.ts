@@ -8,7 +8,7 @@ export interface Snippet {
   comment: string;
 }
 
-export interface Annotation {
+export interface Evaluation {
   assignment: string;
   solution: string;
   _id: string;
@@ -18,4 +18,4 @@ export interface Annotation {
   snippets: Snippet[];
 }
 
-export type AnnotationDto = Omit<Annotation, '_id' | 'assignment' | 'solution'>
+export type EvaluationDto = Omit<Evaluation, '_id' | 'assignment' | 'solution'>

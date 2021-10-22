@@ -2,7 +2,7 @@ import {HttpService} from '@nestjs/axios';
 import {Injectable} from '@nestjs/common';
 import {CodeAction, CodeActionParams, WorkspaceEdit} from 'vscode-languageserver';
 import {Position, Range} from 'vscode-languageserver-textdocument';
-import {Snippet} from '../assignments-api/annotation';
+import {Snippet} from '../assignments-api/evaluation';
 import {Task} from '../assignments-api/assignment';
 import {AssignmentsApiService} from '../assignments-api/assignments-api.service';
 import {ConfigService} from '../config/config.service';
@@ -23,7 +23,7 @@ interface SubmitData {
   uri: string;
   currentLine: number;
   solution: string;
-  annotation: {
+  evaluation: {
     points: number;
     task: string;
   };
@@ -46,7 +46,7 @@ interface DeleteData {
   uri: string;
   assignment: string;
   solution: string;
-  annotation: string;
+  evaluation: string;
   snippet: number;
 }
 
@@ -96,7 +96,7 @@ export class ActionService {
         uri,
         currentLine: range.start.line,
         solution: solution._id,
-        annotation: {
+        evaluation: {
           task: taskId,
           points: min,
         },
@@ -112,8 +112,8 @@ export class ActionService {
           title: `✅ Submit Feedback (${max}P)`,
           data: {
             ...data,
-            annotation: {
-              ...data.annotation,
+            evaluation: {
+              ...data.evaluation,
               points: max,
             },
           },
@@ -133,7 +133,7 @@ export class ActionService {
       ];
     }
 
-    // TODO: It's better to fetch the overlapping annotations/snippets ourselves
+    // TODO: It's better to fetch the overlapping evaluations/snippets ourselves
     //       because the diagnostics may not be up-to-date
     const diagnostics = params.context.diagnostics.filter(d => d.data);
     if (diagnostics.length) {
@@ -216,7 +216,7 @@ export class ActionService {
     const {uri, currentLine} = params.data as SubmitData;
     params.edit = this.createDeleteLineEdit(uri, currentLine);
 
-    const {solution, snippet: snippetBase, annotation: annotationBase} = params.data as SubmitData;
+    const {solution, snippet: snippetBase, evaluation: evaluationBase} = params.data as SubmitData;
     const config = await this.configService.getDocumentConfig(uri);
     const document = this.documentService.documents.get(uri);
     const snippet: Snippet = {
@@ -228,19 +228,19 @@ export class ActionService {
       }) ?? '',
     };
 
-    const existing = await this.assignmentsApiService.getAnnotations(config, solution, {
-      task: annotationBase.task,
+    const existing = await this.assignmentsApiService.getEvaluations(config, solution, {
+      task: evaluationBase.task,
     });
     if (existing.length) {
       const first = existing[0];
-      await this.assignmentsApiService.updateAnnotation(config, solution, first._id, {
+      await this.assignmentsApiService.updateEvaluation(config, solution, first._id, {
         ...first,
-        ...annotationBase,
+        ...evaluationBase,
         snippets: [...first.snippets, snippet],
       });
     } else {
-      await this.assignmentsApiService.createAnnotation(config, solution, {
-        ...annotationBase,
+      await this.assignmentsApiService.createEvaluation(config, solution, {
+        ...evaluationBase,
         author: config.user.name,
         snippets: [snippet],
       });
@@ -267,11 +267,11 @@ export class ActionService {
   }
 
   private async resolveDeleteAction(action: CodeAction): Promise<CodeAction> {
-    const {uri, solution, annotation, snippet} = action.data as DeleteData;
+    const {uri, solution, evaluation, snippet} = action.data as DeleteData;
     const config = await this.configService.getDocumentConfig(uri);
-    const existing = await this.assignmentsApiService.getAnnotation(config, solution, annotation);
+    const existing = await this.assignmentsApiService.getEvaluation(config, solution, evaluation);
     existing.snippets.splice(snippet, 1);
-    await this.assignmentsApiService.updateAnnotation(config, solution, annotation, {
+    await this.assignmentsApiService.updateEvaluation(config, solution, evaluation, {
       snippets: existing.snippets,
     });
     return action;

@@ -3,7 +3,7 @@ import {Injectable} from '@nestjs/common';
 import {AxiosRequestConfig} from 'axios';
 import {firstValueFrom} from 'rxjs';
 import {Config} from '../config/config';
-import {Annotation, AnnotationDto} from './annotation';
+import {Evaluation, EvaluationDto} from './evaluation';
 import {Assignment, Task} from './assignment';
 import {Solution} from './solution';
 
@@ -59,27 +59,27 @@ export class AssignmentsApiService {
     return all[0];
   }
 
-  async createAnnotation(config: Config, solution: string, dto: AnnotationDto): Promise<Annotation> {
-    return this.http<Annotation>('POST', `${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions/${solution}/annotations`, dto, {
+  async createEvaluation(config: Config, solution: string, dto: EvaluationDto): Promise<Evaluation> {
+    return this.http<Evaluation>('POST', `${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions/${solution}/evaluations`, dto, {
       headers: this.getHeaders(config),
     });
   }
 
-  async getAnnotations(config: Config, solution: string, params?: { task?: string, file?: string }): Promise<Annotation[]> {
-    return this.http<Annotation[]>('GET', `${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions/${solution}/annotations`, undefined, {
+  async getEvaluations(config: Config, solution: string, params?: { task?: string, file?: string }): Promise<Evaluation[]> {
+    return this.http<Evaluation[]>('GET', `${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions/${solution}/evaluations`, undefined, {
       params,
       headers: this.getHeaders(config),
     });
   }
 
-  async getAnnotation(config: Config, solution: string, id: string): Promise<Annotation> {
-    return this.http<Annotation>('GET', `${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions/${solution}/annotations/${id}`, undefined, {
+  async getEvaluation(config: Config, solution: string, id: string): Promise<Evaluation> {
+    return this.http<Evaluation>('GET', `${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions/${solution}/evaluations/${id}`, undefined, {
       headers: this.getHeaders(config),
     });
   }
 
-  async updateAnnotation(config: Config, solution: string, id: string, dto: Partial<AnnotationDto>): Promise<Annotation> {
-    return this.http<Annotation>('PATCH', `${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions/${solution}/annotations/${id}`, dto, {
+  async updateEvaluation(config: Config, solution: string, id: string, dto: Partial<EvaluationDto>): Promise<Evaluation> {
+    return this.http<Evaluation>('PATCH', `${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions/${solution}/evaluations/${id}`, dto, {
       headers: this.getHeaders(config),
     });
   }
