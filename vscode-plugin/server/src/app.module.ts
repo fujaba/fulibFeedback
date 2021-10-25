@@ -6,6 +6,7 @@ import {DocumentService} from './document/document.service';
 import {ValidationService} from './validation/validation.service';
 import { ActionService } from './action/action.service';
 import { AssignmentsApiService } from './assignments-api/assignments-api.service';
+import { TaskMatcherService } from './task-matcher/task-matcher.service';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { AssignmentsApiService } from './assignments-api/assignments-api.service
     ValidationService,
     ActionService,
     AssignmentsApiService,
+    TaskMatcherService,
   ],
 })
 export class AppModule {

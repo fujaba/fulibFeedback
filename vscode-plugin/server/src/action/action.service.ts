@@ -8,6 +8,7 @@ import {AssignmentsApiService} from '../assignments-api/assignments-api.service'
 import {ConfigService} from '../config/config.service';
 import {ConnectionService} from '../connection/connection.service';
 import {DocumentService} from '../document/document.service';
+import {TaskMatcherService} from '../task-matcher/task-matcher.service';
 
 export const feedbackPattern = /\/\/ Feedback:([a-zA-Z0-9]+):(\d+):(\d+)-(\d+):(\d+):Comment:(.*)/;
 
@@ -58,6 +59,7 @@ export class ActionService {
     private documentService: DocumentService,
     private httpService: HttpService,
     private assignmentsApiService: AssignmentsApiService,
+    private taskMatcherService: TaskMatcherService,
   ) {
     this.connectionService.connection.onCodeAction((params) => this.provideActions(params));
     this.connectionService.connection.onCodeActionResolve(params => this.resolveAction(params));
@@ -150,14 +152,20 @@ export class ActionService {
     }
 
     const actions: CodeAction[] = [];
-    this.addActions(assignment.tasks, uri, range, 0, actions);
+    const text = document.getText();
+    this.addActions(assignment.tasks, uri, text, range, 0, actions);
     return actions;
   }
 
-  private addActions(tasks: Task[], uri: string, range: Range, depth: number, actions: CodeAction[]): void {
+  private addActions(tasks: Task[], uri: string, text: string, range: Range, depth: number, actions: CodeAction[]): void {
     for (const task of tasks) {
+      const appRange = this.taskMatcherService.getApplicableRange(task, text);
+      if (!appRange) {
+        continue;
+      }
       actions.push(this.createAction(task, uri, range, depth));
-      this.addActions(task.children, uri, range, depth + 1, actions);
+      const subText = text.substring(...appRange);
+      this.addActions(task.children, uri, subText, range, depth + 1, actions);
     }
   }
 
