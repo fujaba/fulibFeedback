@@ -7,4 +7,4 @@ SEMICOLON: [;];
 OPEN_BRACE: [{];
 CLOSING_BRACE: [}];
 WS: [ \t\r\n\f\b] -> skip;
-ANY: .+?;
+ANY: ~[ \t\r\n\f\b;{}]+;
