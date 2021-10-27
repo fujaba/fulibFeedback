@@ -1,6 +1,6 @@
 import {HttpService} from '@nestjs/axios';
 import {Injectable} from '@nestjs/common';
-import {AxiosRequestConfig, Method} from 'axios';
+import {AxiosError, AxiosRequestConfig, Method} from 'axios';
 import {firstValueFrom} from 'rxjs';
 import {Config} from '../config/config';
 import {Evaluation, EvaluationDto} from './evaluation';
@@ -93,8 +93,8 @@ export class AssignmentsApiService {
         data: body,
       }));
       return data;
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      console.error(error.message, error.response?.data);
       throw error;
     }
   }

@@ -11,10 +11,11 @@ export interface Snippet {
 export interface Evaluation {
   assignment: string;
   solution: string;
-  _id: string;
   task: string;
-  author: string;
+  _id: string;
+  remark: string;
   points: number;
+  author: string;
   snippets: Snippet[];
 }
 
