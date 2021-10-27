@@ -249,6 +249,7 @@ export class ActionService {
     } else {
       await this.assignmentsApiService.createEvaluation(config, solution, {
         ...evaluationBase,
+        remark: '',
         author: config.user.name,
         snippets: [snippet],
       });
