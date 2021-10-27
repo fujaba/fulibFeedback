@@ -153,21 +153,20 @@ export class ActionService {
 
     const actions: CodeAction[] = [];
     const path = this.taskMatcherService.getPath(document.getText(), document.offsetAt(range.start));
-    this.addActions(assignment.tasks, uri, path, 0, range, 0, actions);
-    return actions;
-  }
+    const addActions = (tasks: Task[], pathStart: number, depth: number) => {
+      for (const task of tasks) {
+        const selectors = this.taskMatcherService.getSelectors(task);
+        const newStart = this.taskMatcherService.applySelectors(selectors, path, pathStart);
+        if (newStart < 0) {
+          continue;
+        }
 
-  private addActions(tasks: Task[], uri: string, path: string, pathStart: number, range: Range, depth: number, actions: CodeAction[]): void {
-    for (const task of tasks) {
-      const selectors = this.taskMatcherService.getSelectors(task);
-      const newStart = this.taskMatcherService.applySelectors(selectors, path, pathStart);
-      if (newStart < 0) {
-        continue;
+        actions.push(this.createAction(task, uri, range, depth));
+        addActions(task.children, newStart, depth + 1);
       }
-
-      actions.push(this.createAction(task, uri, range, depth));
-      this.addActions(task.children, uri, path, newStart, range, depth + 1, actions);
     }
+    addActions(assignment.tasks, 0, 0);
+    return actions;
   }
 
   private createAction(task: Task, uri: string, range: Range, depth: number): CodeAction {
