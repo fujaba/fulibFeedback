@@ -2,9 +2,9 @@ import {HttpService} from '@nestjs/axios';
 import {Injectable} from '@nestjs/common';
 import {CodeAction, CodeActionParams, WorkspaceEdit} from 'vscode-languageserver';
 import {Position, Range} from 'vscode-languageserver-textdocument';
-import {Snippet} from '../assignments-api/evaluation';
 import {Task} from '../assignments-api/assignment';
 import {AssignmentsApiService} from '../assignments-api/assignments-api.service';
+import {Snippet} from '../assignments-api/evaluation';
 import {ConfigService} from '../config/config.service';
 import {ConnectionService} from '../connection/connection.service';
 import {DocumentService} from '../document/document.service';
@@ -152,20 +152,21 @@ export class ActionService {
     }
 
     const actions: CodeAction[] = [];
-    const text = document.getText();
-    this.addActions(assignment.tasks, uri, text, range, 0, actions);
+    const path = this.taskMatcherService.getPath(document.getText(), document.offsetAt(range.start));
+    this.addActions(assignment.tasks, uri, path, 0, range, 0, actions);
     return actions;
   }
 
-  private addActions(tasks: Task[], uri: string, text: string, range: Range, depth: number, actions: CodeAction[]): void {
+  private addActions(tasks: Task[], uri: string, path: string, pathStart: number, range: Range, depth: number, actions: CodeAction[]): void {
     for (const task of tasks) {
-      const appRange = this.taskMatcherService.getApplicableRange(task, text);
-      if (!appRange) {
+      const selectors = this.taskMatcherService.getSelectors(task);
+      const newStart = this.taskMatcherService.applySelectors(selectors, path, pathStart);
+      if (newStart < 0) {
         continue;
       }
+
       actions.push(this.createAction(task, uri, range, depth));
-      const subText = text.substring(...appRange);
-      this.addActions(task.children, uri, subText, range, depth + 1, actions);
+      this.addActions(task.children, uri, path, newStart, range, depth + 1, actions);
     }
   }
 

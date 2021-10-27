@@ -1,47 +1,27 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
+import {getNodePath, parseTree} from 'engine';
 import {Task} from '../assignments-api/assignment';
 
 @Injectable()
 export class TaskMatcherService {
-  getApplicableRange(task: Task, text: string): [number, number] | undefined {
-    const pattern = /`([^`]*)`/g;
-    let start = 0;
-    let end = text.length;
-    for (const match of task.description.matchAll(pattern)) {
-      const [, search] = match;
-      start = text.indexOf(search, start);
-      if (start < 0 || start >= end) {
-        return undefined;
-      }
-      const braceStartIndex = text.indexOf('{', start + search.length);
-      if (braceStartIndex < 0 || braceStartIndex >= end) {
-        return undefined;
-      }
-      const braceEndIndex = this.findMatchingBrace(text, braceStartIndex, end);
-      if (braceStartIndex < 0 || braceEndIndex >= end) {
-        return undefined;
-      }
-      start = braceStartIndex + 1;
-      end = braceEndIndex;
-    }
-    return [start, end];
+  getPath(text: string, position: number): string {
+    const node = parseTree(text);
+    return getNodePath(node, position).map(n => n.declaration).join(' { ');
   }
 
-  findMatchingBrace(text: string, start: number, end: number): number {
-    let count = 0;
-    for (let i = start; i < end; i++) {
-      switch (text.charAt(i)) {
-        case '{':
-          count++;
-          break;
-        case '}':
-          count--;
-          if (count == 0) {
-            return i;
-          }
-          break;
+  getSelectors(task: Task): string[] {
+    const pattern = /`([^`]*)`/g;
+    return Array.from(task.description.matchAll(pattern)).map(([, selector]) => selector);
+  }
+
+  applySelectors(selectors: string[], path: string, start: number): number {
+    for (const selector of selectors) {
+      const index = path.indexOf(selector, start);
+      if (index < 0) {
+        return -1;
       }
+      start = index + selector.length;
     }
-    return -1;
+    return start;
   }
 }
