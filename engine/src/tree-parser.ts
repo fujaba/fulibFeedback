@@ -32,3 +32,23 @@ export function parseTree(code: string): Node {
   new ParseTreeWalker().walk(listener, codeCtx);
   return nodes[0];
 }
+
+export function getNodePath(node: Node, position: number): Node[] {
+  if (!contains(node, position)) {
+    return [];
+  }
+
+  const result: Node[] = [node];
+  while (true) {
+    const child = node.children.find(c => contains(c, position));
+    if (!child) {
+      return result;
+    }
+    result.push(child);
+    node = child;
+  }
+}
+
+export function contains(node: Node, position: number): boolean {
+  return node.start <= position && position < node.end;
+}
