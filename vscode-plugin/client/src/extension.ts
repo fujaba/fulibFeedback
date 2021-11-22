@@ -34,6 +34,7 @@ export function activate(context: ExtensionContext) {
   const clientOptions: LanguageClientOptions = {
     documentSelector: [
       {scheme: 'file', language: 'java'},
+      {scheme: 'file', language: 'groovy', pattern: '**/*.gradle'},
       {scheme: 'file', language: 'markdown', pattern: '**/scenarios/**/*.md'},
     ],
     synchronize: {
