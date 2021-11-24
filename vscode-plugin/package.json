@@ -21,7 +21,7 @@
     "onLanguage:java",
     "onLanguage:markdown"
   ],
-  "main": "./client/out/extension",
+  "main": "./client/out/main",
   "contributes": {
     "configuration": {
       "type": "object",

@@ -6,3 +6,5 @@
 **/tsconfig.base.json
 contributing.md
 .travis.yml
+
+client/node_modules/**

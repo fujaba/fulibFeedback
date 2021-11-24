@@ -9,6 +9,10 @@
     "url": "https://github.com/fujaba/fulibFeedback"
   },
   "scripts": {
+    "vscode:prepublish": "pnpm run esbuild-base -- --minify",
+    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
+    "esbuild": "pnpm run esbuild-base -- --sourcemap",
+    "esbuild:watch": "pnpm run esbuild-base -- --sourcemap --watch",
     "build:watch": "tsc --watch"
   },
   "engines": {
@@ -19,6 +23,7 @@
     "vscode-languageclient": "^7.0.0"
   },
   "devDependencies": {
+    "esbuild": "^0.13.15",
     "typescript": "^4.3.5",
     "@types/glob": "^7.1.4",
     "@types/vscode": "^1.52.0",
