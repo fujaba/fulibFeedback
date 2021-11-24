@@ -12,8 +12,10 @@
     "url": "https://github.com/fujaba/fulibFeedback"
   },
   "scripts": {
+    "vscode:prepublish": "pnpm run build:prod",
     "prebuild": "rimraf dist",
     "build": "nest build",
+    "build:prod": "webpack --mode=production",
     "build:watch": "nest build --watch",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -55,7 +57,10 @@
     "ts-loader": "^9.2.3",
     "ts-node": "^10.0.0",
     "tsconfig-paths": "^3.10.1",
-    "typescript": "^4.3.5"
+    "tsconfig-paths-webpack-plugin": "^3.5.2",
+    "typescript": "^4.3.5",
+    "webpack": "^5.64.3",
+    "webpack-cli": "^4.9.1"
   },
   "jest": {
     "moduleFileExtensions": [

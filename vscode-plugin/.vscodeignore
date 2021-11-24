@@ -7,4 +7,6 @@
 contributing.md
 .travis.yml
 
-client/node_modules/**
+client/node_modules/
+server/out/
+server/node_modules/
