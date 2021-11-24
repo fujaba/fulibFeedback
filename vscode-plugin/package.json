@@ -1,10 +1,10 @@
 {
-  "name": "fulibFeedback-language",
+  "name": "fulibFeedback",
   "description": "Language support for fulibFeedback",
   "author": "Adrian Kunz",
-  "publisher": "fujaba",
+  "publisher": "fulib",
   "license": "MIT",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/fujaba/fulibFeedback"
