@@ -7,6 +7,11 @@
 contributing.md
 .travis.yml
 
-client/node_modules/
-server/out/
-server/node_modules/
+scripts/
+
+client/
+!client/dist/
+!client/package.json
+server/
+!server/dist/
+!server/package.json
