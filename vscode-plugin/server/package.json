@@ -1,12 +1,10 @@
 {
   "name": "fulibFeedback-language-server",
   "description": "Language Server for fulibFeedback",
-  "version": "1.0.0",
-  "author": "Microsoft Corporation",
+  "author": "Adrian Kunz",
   "license": "MIT",
-  "engines": {
-    "node": "*"
-  },
+  "version": "0.0.0",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/fujaba/fulibFeedback"
@@ -27,6 +25,9 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json"
+  },
+  "engines": {
+    "node": "*"
   },
   "dependencies": {
     "@nestjs/axios": "^0.0.2",
