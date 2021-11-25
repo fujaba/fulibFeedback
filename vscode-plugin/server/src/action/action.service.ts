@@ -245,6 +245,7 @@ export class ActionService {
         ...first,
         ...evaluationBase,
         snippets: [...first.snippets, snippet],
+        codeSearch: config.codeSearch,
       });
     } else {
       await this.assignmentsApiService.createEvaluation(config, solution, {
@@ -252,6 +253,7 @@ export class ActionService {
         remark: '',
         author: config.user.name,
         snippets: [snippet],
+        codeSearch: config.codeSearch,
       });
     }
     return params;

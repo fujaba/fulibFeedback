@@ -12,4 +12,5 @@ export interface Config {
     token: string;
   };
   apiServer: string;
+  codeSearch: boolean;
 }

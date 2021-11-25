@@ -17,6 +17,7 @@ export const DEFAULT_SETTINGS: Config = {
     token: '',
   },
   apiServer: '',
+  codeSearch: true,
 };
 
 @Injectable()

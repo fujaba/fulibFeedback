@@ -38,6 +38,12 @@
           "type": "string",
           "description": "The API server for annotations."
         },
+        "fulibFeedback.codeSearch": {
+          "scope": "window",
+          "type": "boolean",
+          "default": true,
+          "description": "Use Code Search to automatically find snippets in other submissions and copy your evaluation."
+        },
         "fulibFeedback.user.name": {
           "scope": "application",
           "type": "string",

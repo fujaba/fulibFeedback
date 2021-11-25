@@ -19,4 +19,6 @@ export interface Evaluation {
   snippets: Snippet[];
 }
 
-export type EvaluationDto = Omit<Evaluation, '_id' | 'assignment' | 'solution'>
+export interface EvaluationDto extends Omit<Evaluation, '_id' | 'assignment' | 'solution'> {
+  codeSearch?: boolean;
+}
