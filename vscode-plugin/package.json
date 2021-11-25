@@ -84,6 +84,7 @@
     }
   },
   "scripts": {
+    "vscode:prepublish": "pnpm -C ./client run vscode:prepublish && pnpm -C ./server run vscode:prepublish",
     "test": "sh ./scripts/e2e.sh"
   }
 }
