@@ -33,9 +33,7 @@ export function activate(context: ExtensionContext) {
   // Options to control the language client
   const clientOptions: LanguageClientOptions = {
     documentSelector: [
-      {scheme: 'file', language: 'java'},
-      {scheme: 'file', language: 'groovy', pattern: '**/*.gradle'},
-      {scheme: 'file', language: 'markdown', pattern: '**/scenarios/**/*.md'},
+      {scheme: 'file'},
     ],
     synchronize: {
       // Notify the server about file changes to '.clientrc files contained in the workspace
@@ -46,7 +44,7 @@ export function activate(context: ExtensionContext) {
   // Create the language client and start the client.
   client = new LanguageClient(
     'fulibFeedback',
-    'fulibFeedback Java Checker',
+    'fulibFeedback',
     serverOptions,
     clientOptions,
   );
