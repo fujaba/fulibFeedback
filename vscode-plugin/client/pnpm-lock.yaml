@@ -2,6 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@types/glob': ^7.1.4
+  '@types/mocha': ^9.0.0
   '@types/vscode': ^1.52.0
   '@vscode/test-electron': ^1.6.1
   esbuild: ^0.13.15
@@ -15,6 +16,7 @@ dependencies:
 
 devDependencies:
   '@types/glob': 7.1.4
+  '@types/mocha': 9.0.0
   '@types/vscode': 1.60.0
   '@vscode/test-electron': 1.6.2
   esbuild: 0.13.15
@@ -36,6 +38,10 @@ packages:
 
   /@types/minimatch/3.0.5:
     resolution: {integrity: sha512-Klz949h02Gz2uZCMGwDUSDS1YBlTdDDgbWHi+81l29tQALUtvz4rAYi5uoVhE5Lagoq6DeqAUlbrHvW/mXDgdQ==}
+    dev: true
+
+  /@types/mocha/9.0.0:
+    resolution: {integrity: sha512-scN0hAWyLVAvLR9AyW7HoFF5sJZglyBsbPuHO4fv7JRvfmPBMfp1ozWqOf/e4wwPNxezBZXRfWzMb6iFLgEVRA==}
     dev: true
 
   /@types/node/16.10.3:
