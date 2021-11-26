@@ -4,7 +4,7 @@ import {CodeAction, CodeActionParams, WorkspaceEdit} from 'vscode-languageserver
 import {Position, Range} from 'vscode-languageserver-textdocument';
 import {Task} from '../assignments-api/assignment';
 import {AssignmentsApiService} from '../assignments-api/assignments-api.service';
-import {Snippet} from '../assignments-api/evaluation';
+import {Evaluation, Snippet} from '../assignments-api/evaluation';
 import {ConfigService} from '../config/config.service';
 import {ConnectionService} from '../connection/connection.service';
 import {DocumentService} from '../document/document.service';
@@ -239,16 +239,17 @@ export class ActionService {
     const existing = await this.assignmentsApiService.getEvaluations(config, solution, {
       task: evaluationBase.task,
     });
+    let updated: Evaluation;
     if (existing.length) {
       const first = existing[0];
-      await this.assignmentsApiService.updateEvaluation(config, solution, first._id, {
+      updated = await this.assignmentsApiService.updateEvaluation(config, solution, first._id, {
         ...first,
         ...evaluationBase,
         snippets: [...first.snippets, snippet],
         codeSearch: config.codeSearch,
       });
     } else {
-      await this.assignmentsApiService.createEvaluation(config, solution, {
+      updated = await this.assignmentsApiService.createEvaluation(config, solution, {
         ...evaluationBase,
         remark: '',
         author: config.user.name,
@@ -256,6 +257,7 @@ export class ActionService {
         codeSearch: config.codeSearch,
       });
     }
+    this.inform(updated);
     return params;
   }
 
@@ -282,9 +284,26 @@ export class ActionService {
     const config = await this.configService.getDocumentConfig(uri);
     const existing = await this.assignmentsApiService.getEvaluation(config, solution, evaluation);
     existing.snippets.splice(snippet, 1);
-    await this.assignmentsApiService.updateEvaluation(config, solution, evaluation, {
+    const updated = await this.assignmentsApiService.updateEvaluation(config, solution, evaluation, {
       snippets: existing.snippets,
     });
+    this.inform(updated);
+
     return action;
+  }
+
+  private inform(evaluation: Evaluation) {
+    const {created, updated, deleted} = evaluation.codeSearch ?? {};
+    if (!created && !updated && !deleted) {
+      return;
+    }
+
+    const message = [
+      created && 'Created ' + created,
+      updated && 'Updated ' + updated,
+      deleted && 'Deleted ' + deleted,
+    ].filter(x => x).join(', ') + ' Evaluations via Code Search';
+
+    this.connectionService.connection.window.showInformationMessage(message);
   }
 }
