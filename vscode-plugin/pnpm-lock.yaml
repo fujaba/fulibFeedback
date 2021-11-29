@@ -1,10 +1,10 @@
 lockfileVersion: 5.3
 
 specifiers:
-  vsce: ^2.5.0
+  vsce: ^2.5.1
 
 devDependencies:
-  vsce: 2.5.0
+  vsce: 2.5.1
 
 packages:
 
@@ -748,8 +748,8 @@ packages:
     resolution: {integrity: sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=}
     dev: true
 
-  /vsce/2.5.0:
-    resolution: {integrity: sha512-KgsCX/C5nEUHXGrXac9KOGUXsWRlMEyoZZX0wJsagE4gSieaaHVAHxJu7Vh63a1UyRf6lQcNXmyOzRCYMmrF2Q==}
+  /vsce/2.5.1:
+    resolution: {integrity: sha512-vJ+xY93Wv3NhgeriMyIC2oMA+niifOI9XGIqEToIq/rFRoQnXlmO4PSyis/OxBl9hw8OKKC/VcI9CijfFufEkw==}
     engines: {node: '>= 14'}
     hasBin: true
     dependencies:

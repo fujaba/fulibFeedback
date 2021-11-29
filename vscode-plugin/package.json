@@ -23,7 +23,7 @@
     "onLanguage:java",
     "onLanguage:markdown"
   ],
-  "main": "./client/dist/main",
+  "main": "./client/out/extension",
   "contributes": {
     "configuration": {
       "type": "object",
@@ -92,6 +92,6 @@
     "test": "sh ./scripts/e2e.sh"
   },
   "devDependencies": {
-    "vsce": "^2.5.0"
+    "vsce": "^2.5.1"
   }
 }
