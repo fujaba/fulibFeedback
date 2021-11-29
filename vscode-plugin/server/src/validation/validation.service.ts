@@ -1,11 +1,10 @@
 import {Injectable} from '@nestjs/common';
 import {DiagnosticRelatedInformation} from 'vscode-languageserver';
-import {Range, TextDocument} from 'vscode-languageserver-textdocument';
+import {TextDocument} from 'vscode-languageserver-textdocument';
 import {Diagnostic, DiagnosticSeverity} from 'vscode-languageserver/node';
-import {feedbackPattern} from '../action/action.service';
-import {Evaluation, Snippet} from '../assignments-api/evaluation';
 import {Assignment, Task} from '../assignments-api/assignment';
 import {AssignmentsApiService} from '../assignments-api/assignments-api.service';
+import {Evaluation, Snippet} from '../assignments-api/evaluation';
 import {ConfigService} from '../config/config.service';
 import {ConnectionService} from '../connection/connection.service';
 import {DocumentService} from '../document/document.service';
@@ -38,28 +37,9 @@ export class ValidationService {
     }
 
     const diagnostics: Diagnostic[] = [];
-    this.addPendingFeedbackDiagnostics(document, diagnostics);
     this.addEvaluationDiagnostics(assignment, evaluations, document, diagnostics);
 
     this.connectionService.connection.sendDiagnostics({uri, diagnostics});
-  }
-
-  private addPendingFeedbackDiagnostics(document: TextDocument, diagnostics: Diagnostic[]) {
-    const text = document.getText();
-    const pattern = new RegExp(feedbackPattern, 'g');
-    let match: RegExpExecArray | null;
-    while (match = pattern.exec(text)) {
-      const range: Range = {
-        start: document.positionAt(match.index),
-        end: document.positionAt(match.index + match[0].length),
-      };
-      diagnostics.push({
-        range,
-        severity: DiagnosticSeverity.Warning,
-        message: 'Unsubmitted Feedback\nEnter a comment and press Alt+Enter to submit the Feedback.',
-        source: 'Feedback',
-      });
-    }
   }
 
   private addEvaluationDiagnostics(assignment: Assignment, evaluations: Evaluation[], document: TextDocument, diagnostics: Diagnostic[]) {

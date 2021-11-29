@@ -1,10 +1,11 @@
 import {HttpService} from '@nestjs/axios';
 import {Injectable} from '@nestjs/common';
-import {AxiosError, AxiosRequestConfig, Method} from 'axios';
+import {AxiosRequestConfig, Method} from 'axios';
 import {firstValueFrom} from 'rxjs';
 import {Config} from '../config/config';
-import {Evaluation, EvaluationDto} from './evaluation';
 import {Assignment, Task} from './assignment';
+import {Evaluation} from './evaluation';
+import {CreateSelectionDto, SelectionDto} from './selection';
 import {Solution} from './solution';
 
 @Injectable()
@@ -59,12 +60,6 @@ export class AssignmentsApiService {
     return all[0];
   }
 
-  async createEvaluation(config: Config, solution: string, dto: EvaluationDto): Promise<Evaluation> {
-    return this.http<Evaluation>('POST', `${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions/${solution}/evaluations`, dto, {
-      headers: this.getHeaders(config),
-    });
-  }
-
   async getEvaluations(config: Config, solution: string, params?: { task?: string, file?: string }): Promise<Evaluation[]> {
     return this.http<Evaluation[]>('GET', `${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions/${solution}/evaluations`, undefined, {
       params,
@@ -72,14 +67,8 @@ export class AssignmentsApiService {
     });
   }
 
-  async getEvaluation(config: Config, solution: string, id: string): Promise<Evaluation> {
-    return this.http<Evaluation>('GET', `${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions/${solution}/evaluations/${id}`, undefined, {
-      headers: this.getHeaders(config),
-    });
-  }
-
-  async updateEvaluation(config: Config, solution: string, id: string, dto: Partial<EvaluationDto>): Promise<Evaluation> {
-    return this.http<Evaluation>('PATCH', `${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions/${solution}/evaluations/${id}`, dto, {
+  async setSelection(config: Config, solution: string, dto: CreateSelectionDto): Promise<SelectionDto> {
+    return this.http<SelectionDto>('POST', `${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions/${solution}/selections`, dto, {
       headers: this.getHeaders(config),
     });
   }
