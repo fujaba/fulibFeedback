@@ -286,6 +286,7 @@ export class ActionService {
     existing.snippets.splice(snippet, 1);
     const updated = await this.assignmentsApiService.updateEvaluation(config, solution, evaluation, {
       snippets: existing.snippets,
+      codeSearch: config.codeSearch,
     });
     this.inform(updated);
 
