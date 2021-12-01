@@ -1,12 +1,13 @@
 import {HttpService} from '@nestjs/axios';
 import {Injectable} from '@nestjs/common';
 import {AxiosRequestConfig, Method} from 'axios';
-import {firstValueFrom} from 'rxjs';
+import {firstValueFrom, Observable} from 'rxjs';
 import {Config} from '../config/config';
 import {Assignment, Task} from './assignment';
 import {Evaluation} from './evaluation';
 import {CreateSelectionDto, SelectionDto} from './selection';
 import {Solution} from './solution';
+import * as EventSource from 'eventsource';
 
 @Injectable()
 export class AssignmentsApiService {
@@ -64,6 +65,17 @@ export class AssignmentsApiService {
     return this.http<Evaluation[]>('GET', `${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions/${solution}/evaluations`, undefined, {
       params,
       headers: this.getHeaders(config),
+    });
+  }
+
+  streamEvaluations(config: Config, solution: string): Observable<{ event: string, evaluation: Evaluation }> {
+    const {apiServer, assignment: {id, token}} = config;
+    const url = `${apiServer}/api/v1/assignments/${id}/solutions/${solution}/evaluations/events?token=${token}`;
+    return new Observable(observer => {
+      const eventSource = new EventSource(url);
+      eventSource.onmessage = event => observer.next(JSON.parse(event.data));
+      eventSource.onerror = event => observer.error(event);
+      return () => eventSource.close();
     });
   }
 

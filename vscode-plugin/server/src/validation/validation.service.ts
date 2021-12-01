@@ -1,4 +1,5 @@
 import {Injectable} from '@nestjs/common';
+import {Subscription} from 'rxjs';
 import {DiagnosticRelatedInformation} from 'vscode-languageserver';
 import {TextDocument} from 'vscode-languageserver-textdocument';
 import {Diagnostic, DiagnosticSeverity} from 'vscode-languageserver/node';
@@ -11,6 +12,9 @@ import {DocumentService} from '../document/document.service';
 
 @Injectable()
 export class ValidationService {
+  private subscription?: Subscription;
+  private openDocuments: TextDocument[] = [];
+
   constructor(
     private connectionService: ConnectionService,
     private documentService: DocumentService,
@@ -22,6 +26,38 @@ export class ValidationService {
     });
     this.documentService.documents.onDidChangeContent(change => {
       this.validateTextDocument(change.document);
+    });
+
+    this.documentService.documents.onDidOpen(async event => {
+      this.openDocuments.push(event.document);
+
+      if (!this.subscription) {
+        await this.initStream(event.document);
+      }
+    });
+    this.documentService.documents.onDidClose(event => {
+      const index = this.openDocuments.findIndex(t => t.uri === event.document.uri);
+      if (index >= 0) {
+        this.openDocuments.splice(index, 1);
+      }
+
+      if (this.openDocuments.length === 0) {
+        this.subscription?.unsubscribe();
+        delete this.subscription;
+      }
+    });
+  }
+
+  private async initStream(document: TextDocument) {
+    const config = await this.configService.getDocumentConfig(document.uri);
+    const {github} = await this.assignmentsApiService.getFileAndGithub(config, document.uri);
+    const solution = await this.assignmentsApiService.getSolution(config, github);
+    this.subscription = this.assignmentsApiService.streamEvaluations(config, solution._id).subscribe(({evaluation}) => {
+      for (const openDocument of this.openDocuments) {
+        if (evaluation.snippets.find(s => openDocument.uri.endsWith(s.file))) {
+          this.validateTextDocument(openDocument);
+        }
+      }
     });
   }
 

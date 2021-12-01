@@ -29,11 +29,17 @@ export class ConfigService {
     private documentService: DocumentService,
     private connectionService: ConnectionService,
   ) {
+    this.connectionService.connection.onInitialized(async () => {
+      this.globalSettings = await this.connectionService.connection.workspace.getConfiguration('fulibFeedback');
+    });
+
     this.connectionService.connection.onDidChangeConfiguration(change => {
+      const config = change.settings.fulibFeedback as Config;
+      if (config) {
+        this.globalSettings = config;
+      }
       if (this.connectionService.hasConfigurationCapability) {
         this.documentConfigs.clear();
-      } else {
-        this.globalSettings = change.settings.fulibFeedback as Config || DEFAULT_SETTINGS;
       }
     });
 
@@ -44,7 +50,7 @@ export class ConfigService {
 
   getDocumentConfig(resource: string): Thenable<Config> {
     if (!this.connectionService.hasConfigurationCapability) {
-      return Promise.resolve(DEFAULT_SETTINGS);
+      return Promise.resolve(this.globalSettings);
     }
     let result = this.documentConfigs.get(resource);
     if (!result) {
