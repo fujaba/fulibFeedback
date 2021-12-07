@@ -18,18 +18,20 @@ export class AssignmentsApiService {
 
   async getContext(config: Config, uri: string) {
     const assignment = await this.getAssignment(config);
-    const {github, file} = await this.getFileAndGithub(assignment, uri);
-    const solution = await this.getSolution(config, github);
+    const {username, file} = await this.getFileAndGithub(assignment, uri);
+    const solution = await this.getSolution(config, username);
     return {assignment, solution, file};
   }
 
   private async getFileAndGithub(assignment: Assignment, uri: string) {
     const prefix = assignment.classroom.prefix;
     const prefixIndex = uri.indexOf(prefix);
-    const slashIndex = uri.indexOf('/', prefixIndex + prefix.length);
-    const github = uri.substring(prefixIndex + prefix.length + 1, slashIndex);
-    const file = uri.substring(slashIndex + 1);
-    return {github, file};
+    // This works for prefix-Student/ as well as prefix/Student/
+    const usernameStart = prefixIndex + prefix.length + 1;
+    const usernameEnd = uri.indexOf('/', usernameStart);
+    const username = uri.substring(usernameStart, usernameEnd);
+    const file = uri.substring(usernameEnd + 1);
+    return {username, file};
   }
 
   findTask(tasks: Task[], id: string): Task | undefined {
