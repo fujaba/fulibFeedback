@@ -52,6 +52,10 @@ export class ValidationService {
     const config = await this.configService.getDocumentConfig(document.uri);
     const {github} = await this.assignmentsApiService.getFileAndGithub(config, document.uri);
     const solution = await this.assignmentsApiService.getSolution(config, github);
+    if (!solution) {
+      return;
+    }
+
     this.subscription = this.assignmentsApiService.streamEvaluations(config, solution._id).subscribe(({evaluation}) => {
       for (const openDocument of this.openDocuments) {
         if (evaluation.snippets.find(s => openDocument.uri.endsWith(s.file))) {
@@ -66,6 +70,10 @@ export class ValidationService {
     const config = await this.configService.getDocumentConfig(uri);
     const {assignment, github, file} = await this.assignmentsApiService.getFileAndGithub(config, uri);
     const solution = await this.assignmentsApiService.getSolution(config, github);
+    if (!solution) {
+      return;
+    }
+
     const evaluations = await this.assignmentsApiService.getEvaluations(config, solution._id, {file});
     const document = this.documentService.documents.get(uri);
     if (!document) {

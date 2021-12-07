@@ -30,6 +30,10 @@ export class ActionService {
 
     const {github, file} = await this.assignmentsApiService.getFileAndGithub(config, uri);
     const solution = await this.assignmentsApiService.getSolution(config, github);
+    if (!solution) {
+      return [];
+    }
+
     const range = params.range;
 
     await this.assignmentsApiService.setSelection(config, solution._id, {

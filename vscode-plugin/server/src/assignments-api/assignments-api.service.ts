@@ -45,7 +45,7 @@ export class AssignmentsApiService {
     });
   }
 
-  async getSolution(config: Config, github: string): Promise<Solution> {
+  async getSolution(config: Config, github: string): Promise<Solution | undefined> {
     if (config.solution.id) {
       return this.http<Solution>('GET', `${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions/${config.solution.id}`, undefined, {
         headers: this.getHeaders(config),
