@@ -24,17 +24,10 @@ export class ActionService {
     }
 
     const config = await this.configService.getDocumentConfig(uri);
-    if (!config.assignment.token) {
+    const {assignment, solution, file} = await this.assignmentsApiService.getContext(config, uri);
+    if (!assignment || !solution) {
       return [];
     }
-
-    const assignment = await this.assignmentsApiService.getAssignment(config);
-    const {github, file} = await this.assignmentsApiService.getFileAndGithub(assignment, uri);
-    const solution = await this.assignmentsApiService.getSolution(config, github);
-    if (!solution) {
-      return [];
-    }
-
     const range = params.range;
 
     await this.assignmentsApiService.setSelection(config, solution._id, {

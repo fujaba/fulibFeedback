@@ -16,7 +16,14 @@ export class AssignmentsApiService {
   ) {
   }
 
-  async getFileAndGithub(assignment: Assignment, uri: string) {
+  async getContext(config: Config, uri: string) {
+    const assignment = await this.getAssignment(config);
+    const {github, file} = await this.getFileAndGithub(assignment, uri);
+    const solution = await this.getSolution(config, github);
+    return {assignment, solution, file};
+  }
+
+  private async getFileAndGithub(assignment: Assignment, uri: string) {
     const prefix = assignment.classroom.prefix;
     const prefixIndex = uri.indexOf(prefix);
     const slashIndex = uri.indexOf('/', prefixIndex + prefix.length);
