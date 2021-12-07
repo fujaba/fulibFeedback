@@ -114,13 +114,6 @@ export class ValidationService {
       severity: task ? this.getSeverity(task, evaluation) : DiagnosticSeverity.Warning,
       code: evaluation.points + 'P',
       relatedInformation,
-      // TODO not necessary when fetching evaluations/snippets in ActionService
-      data: {
-        assignment: evaluation.assignment,
-        solution: evaluation.solution,
-        evaluation: evaluation._id,
-        snippet: evaluation.snippets.indexOf(snippet),
-      },
     };
     return diagnostic;
   }
