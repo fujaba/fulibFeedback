@@ -50,7 +50,8 @@ export class ValidationService {
 
   private async initStream(document: TextDocument) {
     const config = await this.configService.getDocumentConfig(document.uri);
-    const {github} = await this.assignmentsApiService.getFileAndGithub(config, document.uri);
+    const assignment = await this.assignmentsApiService.getAssignment(config);
+    const {github} = await this.assignmentsApiService.getFileAndGithub(assignment, document.uri);
     const solution = await this.assignmentsApiService.getSolution(config, github);
     if (!solution) {
       return;
@@ -68,7 +69,8 @@ export class ValidationService {
   async validateTextDocument(textDocument: TextDocument): Promise<void> {
     const uri = textDocument.uri;
     const config = await this.configService.getDocumentConfig(uri);
-    const {assignment, github, file} = await this.assignmentsApiService.getFileAndGithub(config, uri);
+    const assignment = await this.assignmentsApiService.getAssignment(config);
+    const {github, file} = await this.assignmentsApiService.getFileAndGithub(assignment, uri);
     const solution = await this.assignmentsApiService.getSolution(config, github);
     if (!solution) {
       return;
