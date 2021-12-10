@@ -33,12 +33,12 @@ export function activate(context: ExtensionContext) {
   // Options to control the language client
   const clientOptions: LanguageClientOptions = {
     documentSelector: [
-      {scheme: 'file'},
+      {scheme: 'file', language: 'java'},
+      {scheme: 'file', language: 'markdown'},
+      {scheme: 'file', language: 'gradle'},
     ],
     synchronize: {
       configurationSection: 'fulibFeedback',
-      // Notify the server about file changes to '.clientrc files contained in the workspace
-      fileEvents: workspace.createFileSystemWatcher('**/.clientrc'),
     },
   };
 
