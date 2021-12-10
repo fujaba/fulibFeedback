@@ -39,7 +39,10 @@
         "fulibFeedback.apiServer": {
           "scope": "window",
           "type": "string",
-          "description": "The API server for annotations."
+          "default": "https://fulib.org",
+          "description": "The API server for fetching evaluations and sending selections.",
+          "pattern": "^https?:\\/\\/(?=.{1,254}(?::|$))(?:(?!\\d|-)(?![a-z0-9\\-]{1,62}-(?:\\.|:|$))[a-z0-9\\-]{1,63}\\b(?!\\.$)\\.?)+(:\\d+)?$",
+          "patternErrorMessage": "Not a valid API server"
         },
         "fulibFeedback.codeSearch": {
           "scope": "window",
@@ -55,22 +58,30 @@
         "fulibFeedback.assignment.id": {
           "scope": "window",
           "type": "string",
-          "description": "The ID of the current assignment"
+          "description": "The ID of the current assignment",
+          "pattern": "^([a-f\\d]{24})?$",
+          "patternErrorMessage": "Not a valid assignment ID"
         },
         "fulibFeedback.assignment.token": {
           "scope": "window",
           "type": "string",
-          "description": "The token for the current assignment"
+          "description": "The token for the current assignment",
+          "pattern": "^([a-f\\d\\-]{19})?$",
+          "patternErrorMessage": "Not a valid assignment token"
         },
         "fulibFeedback.solution.id": {
           "scope": "window",
           "type": "string",
-          "description": "The ID of the current solution"
+          "description": "The ID of the current solution",
+          "pattern": "^([a-f\\d]{24})?$",
+          "patternErrorMessage": "Not a valid solution ID"
         },
         "fulibFeedback.solution.token": {
           "scope": "window",
           "type": "string",
-          "description": "The token for the current solution"
+          "description": "The token for the current solution",
+          "pattern": "^([a-f\\d\\-]{19})?$",
+          "patternErrorMessage": "Not a valid solution token"
         },
         "fulibFeedback.trace.server": {
           "scope": "window",
