@@ -25,7 +25,7 @@ export class ActionService {
 
     const config = await this.configService.getDocumentConfig(uri);
     const {assignment, solution, file} = await this.assignmentsApiService.getContext(config, uri);
-    if (!assignment || !solution) {
+    if (!assignment || !solution || !file) {
       return [];
     }
     const range = params.range;

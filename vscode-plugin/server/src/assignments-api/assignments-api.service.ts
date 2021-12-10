@@ -17,7 +17,15 @@ export class AssignmentsApiService {
   }
 
   async getContext(config: Config, uri: string) {
+    if (!config.apiServer || !config.assignment.id) {
+      return {};
+    }
+
     const assignment = await this.getAssignment(config);
+    if (!assignment) {
+      return {};
+    }
+
     const {username, file} = await this.getFileAndGithub(assignment, uri);
     const solution = await this.getSolution(config, username);
     return {assignment, solution, file};
@@ -47,17 +55,17 @@ export class AssignmentsApiService {
     return undefined;
   }
 
-  async getAssignment(config: Config): Promise<Assignment> {
-    return this.http('GET', `${config.apiServer}/api/v1/assignments/${config.assignment.id}`, undefined, {
+  async getAssignment(config: Config): Promise<Assignment | undefined> {
+    return this.http<Assignment>('GET', `${config.apiServer}/api/v1/assignments/${config.assignment.id}`, undefined, {
       headers: this.getHeaders(config),
-    });
+    }).catch(() => undefined);
   }
 
   async getSolution(config: Config, github: string): Promise<Solution | undefined> {
     if (config.solution.id) {
       return this.http<Solution>('GET', `${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions/${config.solution.id}`, undefined, {
         headers: this.getHeaders(config),
-      });
+      }).catch(() => undefined);
     }
 
     const all = await this.http<Solution[]>('GET', `${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions`, undefined, {
@@ -73,7 +81,7 @@ export class AssignmentsApiService {
     return this.http<Evaluation[]>('GET', `${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions/${solution}/evaluations`, undefined, {
       params,
       headers: this.getHeaders(config),
-    });
+    }).catch(() => []);
   }
 
   streamEvaluations(config: Config, solution: string): Observable<{ event: string, evaluation: Evaluation }> {
