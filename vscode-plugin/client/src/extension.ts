@@ -36,6 +36,7 @@ export function activate(context: ExtensionContext) {
       {scheme: 'file'},
     ],
     synchronize: {
+      configurationSection: 'fulibFeedback',
       // Notify the server about file changes to '.clientrc files contained in the workspace
       fileEvents: workspace.createFileSystemWatcher('**/.clientrc'),
     },
