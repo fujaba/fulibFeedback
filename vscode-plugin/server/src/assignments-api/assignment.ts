@@ -7,6 +7,7 @@ export interface Task {
 
 export interface Assignment {
   _id: string;
+  title: string;
   classroom: {
     prefix: string;
   };

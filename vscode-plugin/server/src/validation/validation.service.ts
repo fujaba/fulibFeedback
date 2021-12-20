@@ -55,6 +55,11 @@ export class ValidationService {
       return;
     }
 
+    const {name, github} = solution.author;
+    const {title} = assignment;
+    const message = `Grading ${title}, Solution by ${name || github}`;
+    this.connectionService.connection.window.showInformationMessage(message);
+
     this.subscription = this.assignmentsApiService.streamEvaluations(config, solution._id).subscribe(({evaluation}) => {
       for (const openDocument of this.openDocuments) {
         if (evaluation.snippets.find(s => openDocument.uri.endsWith(s.file))) {
