@@ -23,9 +23,7 @@ export function activate(context: ExtensionContext) {
 
   const clientOptions: LanguageClientOptions = {
     documentSelector: [
-      {scheme: 'file', language: 'java'},
-      {scheme: 'file', language: 'markdown'},
-      {scheme: 'file', language: 'gradle'},
+      {scheme: 'file'},
     ],
     synchronize: {
       configurationSection: 'fulibFeedback',

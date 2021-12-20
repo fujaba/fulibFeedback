@@ -20,9 +20,7 @@
     "vscode": "^1.43.0"
   },
   "activationEvents": [
-    "onLanguage:gradle",
-    "onLanguage:java",
-    "onLanguage:markdown"
+    "onFileSystem:file"
   ],
   "main": "./client/dist/main",
   "contributes": {
