@@ -20,7 +20,8 @@
     "vscode": "^1.43.0"
   },
   "activationEvents": [
-    "onFileSystem:file"
+    "onFileSystem:file",
+    "onUri"
   ],
   "main": "./client/dist/main",
   "contributes": {
