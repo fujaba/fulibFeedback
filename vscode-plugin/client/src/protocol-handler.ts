@@ -20,25 +20,27 @@ export class FeedbackProtocolHandler implements UriHandler, Disposable {
     const data = querystring.parse(uri.query);
     const {assignment, solution, token, api_server} = data;
     const config = vscode.workspace.getConfiguration('fulibFeedback');
+    const target = solution ? ConfigurationTarget.Workspace : ConfigurationTarget.Global;
     let changed: string[] = [];
     if (api_server) {
-      config.update('apiServer', api_server, ConfigurationTarget.Global);
+      config.update('apiServer', api_server, target);
       changed.push('API Server: ' + api_server);
     }
     if (assignment) {
-      config.update('assignment.id', assignment, ConfigurationTarget.Global);
+      config.update('assignment.id', assignment, target);
       changed.push('Assignment ID: ' + assignment);
-      if (token) {
-        config.update('assignment.token', token, ConfigurationTarget.Global);
-        changed.push('Assignment Token: ' + token);
-      }
     }
     if (solution) {
-      config.update('solution.id', solution, ConfigurationTarget.Workspace);
+      config.update('solution.id', solution, target);
       changed.push('Solution ID: ' + solution);
-      if (token) {
-        config.update('solution.token', token, ConfigurationTarget.Workspace);
+    }
+    if (token) {
+      if (solution) {
+        config.update('solution.token', token, target);
         changed.push('Solution Token: ' + token);
+      } else {
+        config.update('assignment.token', token, target);
+        changed.push('Assignment Token: ' + token);
       }
     }
     if (changed.length) {
