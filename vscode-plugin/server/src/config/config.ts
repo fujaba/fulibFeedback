@@ -1,5 +1,4 @@
 export interface Config {
-  maxNumberOfProblems: number;
   user: {
     name: string;
   };
@@ -12,5 +11,4 @@ export interface Config {
     token: string;
   };
   apiServer: string;
-  codeSearch: boolean;
 }

@@ -29,12 +29,6 @@
       "type": "object",
       "title": "fulibFeedback configuration",
       "properties": {
-        "fulibFeedback.maxNumberOfProblems": {
-          "scope": "resource",
-          "type": "number",
-          "default": 100,
-          "description": "Controls the maximum number of problems produced by the server."
-        },
         "fulibFeedback.apiServer": {
           "scope": "window",
           "type": "string",
@@ -42,12 +36,6 @@
           "description": "The API server for fetching evaluations and sending selections.",
           "pattern": "^https?:\\/\\/(?=.{1,254}(?::|$))(?:(?!\\d|-)(?![a-z0-9\\-]{1,62}-(?:\\.|:|$))[a-z0-9\\-]{1,63}\\b(?!\\.$)\\.?)+(:\\d+)?$",
           "patternErrorMessage": "Not a valid API server"
-        },
-        "fulibFeedback.codeSearch": {
-          "scope": "window",
-          "type": "boolean",
-          "default": true,
-          "description": "Use Code Search to automatically find snippets in other submissions and copy your evaluation."
         },
         "fulibFeedback.user.name": {
           "scope": "application",

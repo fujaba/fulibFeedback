@@ -4,7 +4,6 @@ import {DocumentService} from '../document/document.service';
 import {Config} from './config';
 
 export const DEFAULT_SETTINGS: Config = {
-  maxNumberOfProblems: 1000,
   user: {
     name: '',
   },
@@ -17,7 +16,6 @@ export const DEFAULT_SETTINGS: Config = {
     token: '',
   },
   apiServer: '',
-  codeSearch: true,
 };
 
 @Injectable()
