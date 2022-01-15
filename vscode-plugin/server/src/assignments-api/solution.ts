@@ -3,5 +3,7 @@ export interface Solution {
   author: {
     name: string;
     github: string;
+    studentId: string;
+    email: string;
   };
 }

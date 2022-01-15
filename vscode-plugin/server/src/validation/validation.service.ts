@@ -55,9 +55,9 @@ export class ValidationService {
       return;
     }
 
-    const {name, github} = solution.author;
+    const {name, github, studentId, email} = solution.author;
     const {title} = assignment;
-    const message = `Grading ${title}, Solution by ${name || github}`;
+    const message = `Grading ${title}, Solution by ${name || github || studentId || email}`;
     this.connectionService.connection.window.showInformationMessage(message);
 
     this.subscription = this.assignmentsApiService.streamEvaluations(config, solution._id).subscribe(({evaluation}) => {
