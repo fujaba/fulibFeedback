@@ -68,13 +68,12 @@ export class AssignmentsApiService {
       }).catch(() => undefined);
     }
 
-    const all = await this.http<Solution[]>('GET', `${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions`, undefined, {
+    return this.http<Solution[]>('GET', `${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions`, undefined, {
       params: {
         'author.github': github,
       },
       headers: this.getHeaders(config),
-    });
-    return all[0];
+    }).then(([solution]) => solution, () => undefined);
   }
 
   async getEvaluations(config: Config, solution: string, params?: { task?: string, file?: string }): Promise<Evaluation[]> {
@@ -111,7 +110,7 @@ export class AssignmentsApiService {
       }));
       return data;
     } catch (error: any) {
-      console.error(error.message, error.response?.data);
+      console.error(method, url, 'Error:', error.message, error.response?.data);
       throw error;
     }
   }

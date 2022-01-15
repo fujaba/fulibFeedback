@@ -1,5 +1,6 @@
 import {Injectable} from '@nestjs/common';
 import {CodeAction, CodeActionParams} from 'vscode-languageserver';
+import {Range} from 'vscode-languageserver-textdocument';
 import {AssignmentsApiService} from '../assignments-api/assignments-api.service';
 import {ConfigService} from '../config/config.service';
 import {ConnectionService} from '../connection/connection.service';
@@ -17,24 +18,27 @@ export class ActionService {
   }
 
   private async provideActions(params: CodeActionParams): Promise<CodeAction[]> {
-    const uri = params.textDocument.uri;
+    this.updateSelection(params.textDocument.uri, params.range);
+    return [];
+  }
+
+  private async updateSelection(uri: string, range: Range): Promise<void> {
     const document = this.documentService.documents.get(uri);
     if (!document) {
-      return [];
+      return;
     }
 
     const config = await this.configService.getDocumentConfig(uri);
     if (!config.assignment.token) {
-      return [];
+      return;
     }
 
     const {assignment, solution, file} = await this.assignmentsApiService.getContext(config, uri);
     if (!assignment || !solution || !file) {
-      return [];
+      return;
     }
-    const range = params.range;
 
-    await this.assignmentsApiService.setSelection(config, solution._id, {
+    this.assignmentsApiService.setSelection(config, solution._id, {
       author: config.user.name,
       snippet: {
         file,
@@ -43,7 +47,6 @@ export class ActionService {
         to: range.end,
         code: document.getText(range),
       },
-    });
-    return [];
+    }).catch(err => console.warn('Selection Error:', err.message));
   }
 }

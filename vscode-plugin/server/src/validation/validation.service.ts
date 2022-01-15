@@ -66,7 +66,7 @@ export class ValidationService {
           this.validateTextDocument(openDocument);
         }
       }
-    });
+    }, error => console.warn('Streaming Error:', error.message));
   }
 
   async validateTextDocument(textDocument: TextDocument): Promise<void> {
