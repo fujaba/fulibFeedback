@@ -24,6 +24,10 @@ export class ActionService {
     }
 
     const config = await this.configService.getDocumentConfig(uri);
+    if (!config.assignment.token) {
+      return [];
+    }
+
     const {assignment, solution, file} = await this.assignmentsApiService.getContext(config, uri);
     if (!assignment || !solution || !file) {
       return [];
