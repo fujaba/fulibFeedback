@@ -26,9 +26,9 @@
   "devDependencies": {
     "@types/glob": "^7.2.0",
     "@types/mocha": "^9.0.0",
-    "@types/vscode": "^1.62.0",
-    "@vscode/test-electron": "^1.6.2",
-    "esbuild": "^0.13.15",
-    "typescript": "^4.5.2"
+    "@types/vscode": "^1.63.1",
+    "@vscode/test-electron": "^2.1.0",
+    "esbuild": "^0.14.11",
+    "typescript": "^4.5.4"
   }
 }

@@ -91,6 +91,6 @@
     "test": "sh ./scripts/e2e.sh"
   },
   "devDependencies": {
-    "vsce": "^2.5.1"
+    "vsce": "^2.6.3"
   }
 }
