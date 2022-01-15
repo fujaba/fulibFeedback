@@ -26,13 +26,30 @@ export class AssignmentsApiService {
       return {};
     }
 
-    const {username, file} = await this.getFileAndGithub(assignment, uri);
-    const solution = await this.getSolution(config, username);
-    return {assignment, solution, file};
+    const prefix = assignment.classroom.prefix;
+    if (prefix) {
+      const {file, username} = this.getFileAndGithub(prefix, uri);
+      const solution = await this.getSolution(config, undefined, username);
+      return {assignment, solution, file};
+    } else {
+      const pathComponents = uri.split('/');
+      const matches = pathComponents.filter(p => /[0-9]/.test(p) && /^[a-zA-Z0-9_.-]+$/.test(p));
+      const search = 'studentId:' + matches.join('|');
+      const solution = await this.getSolution(config, search);
+      if (!solution) {
+        return {};
+      }
+      const studentId = solution.author.studentId;
+      const startIndex = uri.indexOf(studentId);
+      if (startIndex < 0) {
+        return {};
+      }
+      const file = uri.substring(startIndex + studentId.length + 1);
+      return {assignment, solution, file};
+    }
   }
 
-  private async getFileAndGithub(assignment: Assignment, uri: string) {
-    const prefix = assignment.classroom.prefix;
+  private getFileAndGithub(prefix: string, uri: string) {
     const prefixIndex = uri.indexOf(prefix);
     // This works for prefix-Student/ as well as prefix/Student/
     const usernameStart = prefixIndex + prefix.length + 1;
@@ -61,7 +78,7 @@ export class AssignmentsApiService {
     }).catch(() => undefined);
   }
 
-  async getSolution(config: Config, github: string): Promise<Solution | undefined> {
+  async getSolution(config: Config, q?: string, github?: string): Promise<Solution | undefined> {
     if (config.solution.id) {
       return this.http<Solution>('GET', `${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions/${config.solution.id}`, undefined, {
         headers: this.getHeaders(config),
@@ -70,6 +87,7 @@ export class AssignmentsApiService {
 
     return this.http<Solution[]>('GET', `${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions`, undefined, {
       params: {
+        q,
         'author.github': github,
       },
       headers: this.getHeaders(config),
