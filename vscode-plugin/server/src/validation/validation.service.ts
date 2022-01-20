@@ -35,16 +35,30 @@ export class ValidationService {
         await this.initStream(event.document);
       }
     });
-    this.documentService.documents.onDidClose(event => {
+    this.documentService.documents.onDidClose(async event => {
       const index = this.openDocuments.findIndex(t => t.uri === event.document.uri);
       if (index >= 0) {
         this.openDocuments.splice(index, 1);
       }
 
-      if (this.openDocuments.length === 0) {
-        this.subscription?.unsubscribe();
-        delete this.subscription;
+      if (this.openDocuments.length !== 0) {
+        return;
       }
+
+      this.subscription?.unsubscribe();
+      delete this.subscription;
+
+      const config = await this.configService.getDocumentConfig(event.document.uri);
+      const {assignment, solution} = await this.assignmentsApiService.getContext(config, event.document.uri);
+      if (!assignment || !solution) {
+        return;
+      }
+
+      await this.assignmentsApiService.createTelemetry(config, solution._id, {
+        timestamp: new Date(),
+        author: config.user.name,
+        action: 'closeEditor',
+      });
     });
   }
 
@@ -54,6 +68,12 @@ export class ValidationService {
     if (!assignment || !solution) {
       return;
     }
+
+    this.assignmentsApiService.createTelemetry(config, solution._id, {
+      timestamp: new Date(),
+      author: config.user.name,
+      action: 'openEditor',
+    });
 
     const {name, github, studentId, email} = solution.author;
     const {title} = assignment;
