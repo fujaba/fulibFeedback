@@ -131,13 +131,18 @@ export class ValidationService {
       message: other.comment,
     })) : undefined;
 
-    const task = this.assignmentsApiService.findTask(assignment.tasks, evaluation.task);
+    const tasks = this.assignmentsApiService.findTasks(assignment.tasks, evaluation.task);
+    const task = tasks[tasks.length - 1];
     const diagnostic: Diagnostic = {
-      message: `${task?.description}: ${snippet.comment} ~${evaluation.author}`,
+      message: [
+        `${tasks.map(t => t.description).join(' / ')} (${evaluation.points}P)`,
+        evaluation.remark,
+        snippet.comment,
+        '~' + evaluation.author,
+      ].filter(x => x).join('\n'),
       range: this.findRange(document, snippet),
       source: 'Feedback',
       severity: task ? this.getSeverity(task, evaluation) : DiagnosticSeverity.Warning,
-      code: evaluation.points + 'P',
       relatedInformation,
     };
     return diagnostic;

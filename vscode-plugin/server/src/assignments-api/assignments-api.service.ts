@@ -60,17 +60,17 @@ export class AssignmentsApiService {
     return {username, file};
   }
 
-  findTask(tasks: Task[], id: string): Task | undefined {
+  findTasks(tasks: Task[], id: string): Task[] {
     for (const task of tasks) {
       if (task._id === id) {
-        return task;
+        return [task];
       }
-      const subTask = this.findTask(task.children, id);
-      if (subTask) {
-        return subTask;
+      const subTask = this.findTasks(task.children, id);
+      if (subTask.length) {
+        return [task, ...subTask];
       }
     }
-    return undefined;
+    return [];
   }
 
   async getAssignment(config: Config): Promise<Assignment | undefined> {
