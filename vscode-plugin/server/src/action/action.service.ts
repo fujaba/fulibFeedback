@@ -23,8 +23,19 @@ export class ActionService {
   }
 
   private async updateSelection(uri: string, range: Range): Promise<void> {
+    if (range.start.line === range.end.line && range.start.character === range.end.character) {
+      // simple cursor, no selection
+      return;
+    }
+
     const document = this.documentService.documents.get(uri);
     if (!document) {
+      return;
+    }
+
+    const code = document.getText(range);
+    if (!code.trim()) {
+      // whitespace-only selection, ignore
       return;
     }
 
@@ -45,7 +56,7 @@ export class ActionService {
         comment: '(fulibFeedback Selection)',
         from: range.start,
         to: range.end,
-        code: document.getText(range),
+        code,
       },
     }).catch(err => console.warn('Selection Error:', err.message));
   }
