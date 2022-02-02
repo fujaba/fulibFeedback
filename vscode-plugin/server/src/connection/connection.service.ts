@@ -31,9 +31,6 @@ export class ConnectionService {
           codeActionProvider: {
             resolveProvider: true,
           },
-          completionProvider: {
-            resolveProvider: true,
-          },
         },
       };
       if (this.hasWorkspaceFolderCapability) {
