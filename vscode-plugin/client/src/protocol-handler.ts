@@ -13,6 +13,10 @@ export class FeedbackProtocolHandler implements UriHandler, Disposable {
     switch (uri.path) {
       case '/configure':
         this.configure(uri);
+        break;
+      case '/open':
+        this.open(uri);
+        break;
     }
   }
 
@@ -46,6 +50,20 @@ export class FeedbackProtocolHandler implements UriHandler, Disposable {
     if (changed.length) {
       vscode.window.showInformationMessage('fulibFeedback configured:\n' + changed.join('\n'));
     }
+  }
+
+  private open(uri: Uri) {
+    const {file, line, endline} = querystring.parse(uri.query);
+    // open file relative to workspace root
+    const fileUri = Uri.file(vscode.workspace.workspaceFolders[0].uri.fsPath + '/' + file);
+    vscode.window.showTextDocument(fileUri, {
+      selection: new vscode.Range(
+        Number(line),
+        0,
+        Number(endline),
+        0,
+      ),
+    });
   }
 
   dispose(): void {
