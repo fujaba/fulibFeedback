@@ -9,7 +9,6 @@ import com.intellij.javascript.nodejs.interpreter.NodeJsInterpreterManager
 import com.intellij.javascript.nodejs.interpreter.local.NodeJsLocalInterpreter
 import com.intellij.javascript.nodejs.interpreter.wsl.WslNodeInterpreter
 import com.intellij.lang.javascript.service.JSLanguageServiceUtil
-import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.platform.lsp.api.LspServerSupportProvider
@@ -30,7 +29,7 @@ private class FeedbackLspServerDescriptor(project: Project) : ProjectWideLspServ
   override fun isSupportedFile(file: VirtualFile) = true
 
   override fun getWorkspaceConfiguration(item: ConfigurationItem): Any? {
-    if (item.section === "fulibFeedback") {
+    if (item.section == "fulibFeedback") {
       return AppSettingsState.instance.asConfiguration()
     }
     return super.getWorkspaceConfiguration(item)
