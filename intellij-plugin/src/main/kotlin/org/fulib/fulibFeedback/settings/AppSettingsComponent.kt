@@ -26,26 +26,30 @@ class AppSettingsComponent {
           apiServerField = it.component
         }
       }.comment("The API server for fetching evaluations and sending selections.")
-      row("Assignment ID") {
-        textField().also {
-          assignmentIdField = it.component
+      group("Assignment") {
+        row("ID") {
+          textField().also {
+            assignmentIdField = it.component
+          }
         }
-      }
-      row("Assignment Token") {
-        textField().also {
-          assignmentTokenField = it.component
+        row("Token") {
+          textField().also {
+            assignmentTokenField = it.component
+          }
         }
-      }
-      row("Solution ID") {
-        textField().also {
-          solutionIdField = it.component
+      }.comment("The assignment you want to work on.")
+      group("Solution") {
+        row("ID") {
+          textField().also {
+            solutionIdField = it.component
+          }
         }
-      }
-      row("Solution Token") {
-        textField().also {
-          solutionTokenField = it.component
+        row("Token") {
+          textField().also {
+            solutionTokenField = it.component
+          }
         }
-      }
+      }.comment("The solution you want to work on.")
     }
   }
 
