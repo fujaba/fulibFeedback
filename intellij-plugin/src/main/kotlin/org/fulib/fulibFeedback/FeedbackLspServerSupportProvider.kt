@@ -15,6 +15,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.platform.lsp.api.LspServerSupportProvider
 import com.intellij.platform.lsp.api.ProjectWideLspServerDescriptor
 import org.eclipse.lsp4j.ConfigurationItem
+import org.fulib.fulibFeedback.settings.AppSettingsState
 
 class FeedbackLspServerSupportProvider : LspServerSupportProvider {
   override fun fileOpened(project: Project, file: VirtualFile, serverStarter: LspServerSupportProvider.LspServerStarter) {
@@ -30,7 +31,7 @@ private class FeedbackLspServerDescriptor(project: Project) : ProjectWideLspServ
 
   override fun getWorkspaceConfiguration(item: ConfigurationItem): Any? {
     if (item.section === "fulibFeedback") {
-      // TODO
+      return AppSettingsState.instance.asConfiguration()
     }
     return super.getWorkspaceConfiguration(item)
   }

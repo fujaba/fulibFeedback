@@ -27,5 +27,12 @@
        Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
   <extensions defaultExtensionNs="com.intellij">
     <platform.lsp.serverSupportProvider implementation="org.fulib.fulibFeedback.FeedbackLspServerSupportProvider"/>
+    <applicationService
+      serviceImplementation="org.fulib.fulibFeedback.settings.AppSettingsState"/>
+    <applicationConfigurable
+      parentId="tools"
+      instance="org.fulib.fulibFeedback.settings.AppSettingsConfigurable"
+      id="org.fulib.fulibFeedback.settings.AppSettingsConfigurable"
+      displayName="fulibFeedback"/>
   </extensions>
 </idea-plugin>
