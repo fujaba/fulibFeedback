@@ -8,7 +8,6 @@ import {Evaluation} from './evaluation';
 import {CreateSelectionDto, SelectionDto} from './selection';
 import {Solution} from './solution';
 import * as EventSource from 'eventsource';
-import {CreateTelemetryDto, Telemetry} from './telemetry';
 
 @Injectable()
 export class AssignmentsApiService {
@@ -115,12 +114,6 @@ export class AssignmentsApiService {
 
   async setSelection(config: Config, solution: string, dto: CreateSelectionDto): Promise<SelectionDto> {
     return this.http<SelectionDto>('POST', `${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions/${solution}/selections`, dto, {
-      headers: this.getHeaders(config),
-    });
-  }
-
-  async createTelemetry(config: Config, solution: string, dto: CreateTelemetryDto): Promise<Telemetry> {
-    return this.http<Telemetry>('POST', `${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions/${solution}/telemetry`, dto, {
       headers: this.getHeaders(config),
     });
   }
