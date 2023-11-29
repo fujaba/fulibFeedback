@@ -34,5 +34,6 @@
       instance="org.fulib.fulibFeedback.settings.AppSettingsConfigurable"
       id="org.fulib.fulibFeedback.settings.AppSettingsConfigurable"
       displayName="fulibFeedback"/>
+    <jbProtocolCommand implementation="org.fulib.fulibFeedback.FeedbackJBProtocolCommand"/>
   </extensions>
 </idea-plugin>
