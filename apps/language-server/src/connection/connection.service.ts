@@ -1,23 +1,19 @@
-import {Injectable} from '@nestjs/common';
 import {
-  _Connection,
-  createConnection,
+  Connection,
   DidChangeConfigurationNotification,
   InitializeParams,
   InitializeResult,
-  ProposedFeatures,
   TextDocumentSyncKind,
 } from 'vscode-languageserver/node';
 
-@Injectable()
 export class ConnectionService {
-  connection!: _Connection;
   hasConfigurationCapability!: boolean;
   hasWorkspaceFolderCapability!: boolean;
   hasDiagnosticRelatedInformationCapability!: boolean;
 
-  constructor() {
-    this.connection = createConnection(ProposedFeatures.all);
+  constructor(
+    public readonly connection: Connection,
+  ) {
     this.connection.onInitialize((params: InitializeParams) => {
       const capabilities = params.capabilities;
 

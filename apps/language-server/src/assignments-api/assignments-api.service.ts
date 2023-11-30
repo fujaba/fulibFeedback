@@ -1,7 +1,5 @@
-import {HttpService} from '@nestjs/axios';
-import {Injectable} from '@nestjs/common';
-import {AxiosRequestConfig, Method} from 'axios';
-import {firstValueFrom, Observable} from 'rxjs';
+import axios, {AxiosRequestConfig, Method} from 'axios';
+import {Observable} from 'rxjs';
 import {Config} from '../config/config';
 import {Assignment, Task} from './assignment';
 import {Evaluation} from './evaluation';
@@ -9,13 +7,7 @@ import {CreateSelectionDto, SelectionDto} from './selection';
 import {Solution} from './solution';
 import {default as EventSource} from 'eventsource';
 
-@Injectable()
 export class AssignmentsApiService {
-  constructor(
-    private httpService: HttpService,
-  ) {
-  }
-
   async getContext(config: Config, uri: string) {
     if (!config.apiServer || !config.assignment.id) {
       return {};
@@ -120,12 +112,12 @@ export class AssignmentsApiService {
 
   private async http<T>(method: Method, url: string, body?: any, options?: AxiosRequestConfig): Promise<T> {
     try {
-      const {data} = await firstValueFrom(this.httpService.request({
+      const {data} = await axios.request({
         ...options,
         method,
         url,
         data: body,
-      }));
+      });
       return data;
     } catch (error: any) {
       console.error(method, url, 'Error:', error.message, error.response?.data);

@@ -1,4 +1,3 @@
-import {Injectable} from '@nestjs/common';
 import {Subscription} from 'rxjs';
 import {DiagnosticRelatedInformation} from 'vscode-languageserver';
 import {TextDocument} from 'vscode-languageserver-textdocument';
@@ -10,7 +9,6 @@ import {ConfigService} from '../config/config.service';
 import {ConnectionService} from '../connection/connection.service';
 import {DocumentService} from '../document/document.service';
 
-@Injectable()
 export class ValidationService {
   private subscription?: Subscription;
   private openDocuments: TextDocument[] = [];

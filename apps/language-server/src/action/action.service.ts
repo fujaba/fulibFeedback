@@ -1,4 +1,3 @@
-import {Injectable} from '@nestjs/common';
 import {CodeAction, CodeActionParams} from 'vscode-languageserver';
 import {Range} from 'vscode-languageserver-textdocument';
 import {AssignmentsApiService} from '../assignments-api/assignments-api.service';
@@ -6,7 +5,6 @@ import {ConfigService} from '../config/config.service';
 import {ConnectionService} from '../connection/connection.service';
 import {DocumentService} from '../document/document.service';
 
-@Injectable()
 export class ActionService {
   constructor(
     private connectionService: ConnectionService,

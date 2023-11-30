@@ -13,7 +13,6 @@
         "outputPath": "dist/apps/language-server",
         "format": ["cjs"],
         "bundle": true,
-        "external": ["@nestjs/microservices", "class-transformer", "class-validator", "@nestjs/websockets"],
         "main": "apps/language-server/src/main.ts",
         "tsConfig": "apps/language-server/tsconfig.app.json",
         "assets": ["apps/language-server/src/assets"],
