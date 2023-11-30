@@ -53,12 +53,6 @@ export class ValidationService {
       if (!assignment || !solution) {
         return;
       }
-
-      await this.assignmentsApiService.createTelemetry(config, solution._id, {
-        timestamp: new Date(),
-        author: config.user.name,
-        action: 'closeEditor',
-      });
     });
   }
 
@@ -68,12 +62,6 @@ export class ValidationService {
     if (!assignment || !solution) {
       return;
     }
-
-    this.assignmentsApiService.createTelemetry(config, solution._id, {
-      timestamp: new Date(),
-      author: config.user.name,
-      action: 'openEditor',
-    });
 
     const {name, github, studentId, email} = solution.author;
     const {title} = assignment;
