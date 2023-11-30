@@ -8,11 +8,11 @@ import com.intellij.util.xmlb.XmlSerializerUtil
 
 @State(name = "org.intellij.sdk.settings.AppSettingsState", storages = [Storage("fulibFeedbackPlugin.xml"), ])
 class AppSettingsState : PersistentStateComponent<AppSettingsState?> {
-  var userName: String? = null
-  var assignmentId: String? = null
-  var assignmentToken: String? = null
-  var solutionId: String? = null
-  var solutionToken: String? = null
+  var userName = ""
+  var assignmentId = ""
+  var assignmentToken = ""
+  var solutionId = ""
+  var solutionToken = ""
   var apiServer = "https://fulib.org/api/v1"
 
   override fun getState(): AppSettingsState? {
