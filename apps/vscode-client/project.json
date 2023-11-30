@@ -12,7 +12,8 @@
         "platform": "node",
         "outputPath": "dist/apps/vscode-client",
         "format": ["cjs"],
-        "bundle": false,
+        "bundle": true,
+        "external": ["vscode"],
         "main": "apps/vscode-client/src/main.ts",
         "tsConfig": "apps/vscode-client/tsconfig.app.json",
         "assets": ["apps/vscode-client/src/assets"],
@@ -27,6 +28,8 @@
       "configurations": {
         "development": {},
         "production": {
+          "minify": true,
+          "thirdParty": true,
           "esbuildOptions": {
             "sourcemap": false,
             "outExtension": {

@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "vscode-client:build:watch": "nx run vscode-client:build:development --watch",
     "language-server:build:watch": "nx run language-server:build:development --watch"
   },
   "private": true,

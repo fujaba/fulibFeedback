@@ -9,8 +9,10 @@ let protocolHandler: FeedbackProtocolHandler;
 export function activate(context: ExtensionContext) {
   protocolHandler = new FeedbackProtocolHandler();
 
-  const module = context.asAbsolutePath(
-    path.join('server', context.extensionMode === ExtensionMode.Development ? 'out' : 'dist', 'main.js'),
+  const devMode = context.extensionMode === ExtensionMode.Development;
+  const module = context.asAbsolutePath(devMode
+    ? '../language-server/main.js'
+    : './server/main.js',
   );
   const transport = TransportKind.ipc;
   const serverOptions: ServerOptions = {
