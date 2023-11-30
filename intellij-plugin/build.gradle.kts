@@ -31,13 +31,8 @@ tasks {
   }
 
   prepareSandbox {
-    from("${rootDir}/../vscode-plugin/server/dist/main.js")
-    into("${destinationDir.path}/${project.name}/language-server")
-  }
-
-  processResources {
     from("${rootDir}/../vscode-plugin/server/dist/main.js") {
-      into("org/fulib/fulibFeedback/language-server")
+      into("${project.name}/language-server")
     }
   }
 
