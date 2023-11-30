@@ -1,4 +1,5 @@
 {
+  "$schema": "https://raw.githubusercontent.com/wraith13/vscode-schemas/master/en/latest/schemas/vscode-extensions.json",
   "name": "fulibFeedback",
   "description": "Language support for fulibFeedback",
   "author": "Adrian Kunz",
@@ -23,7 +24,6 @@
     "onFileSystem:file",
     "onUri"
   ],
-  "main": "./client/dist/main",
   "contributes": {
     "configuration": {
       "type": "object",
@@ -83,14 +83,5 @@
         }
       }
     }
-  },
-  "scripts": {
-    "vscode:prepublish": "pnpm -C ./client run vscode:prepublish && pnpm -C ./server run vscode:prepublish",
-    "package": "vsce package",
-    "publish": "vsce publish",
-    "test": "sh ./scripts/e2e.sh"
-  },
-  "devDependencies": {
-    "vsce": "^2.6.3"
   }
 }
