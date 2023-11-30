@@ -1,0 +1,70 @@
+{
+  "name": "vscode-client",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/vscode-client/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/apps/vscode-client",
+        "format": ["cjs"],
+        "bundle": false,
+        "main": "apps/vscode-client/src/main.ts",
+        "tsConfig": "apps/vscode-client/tsconfig.app.json",
+        "assets": ["apps/vscode-client/src/assets"],
+        "generatePackageJson": true,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "vscode-client:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "vscode-client:build:development"
+        },
+        "production": {
+          "buildTarget": "vscode-client:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/vscode-client/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/vscode-client/jest.config.ts"
+      }
+    }
+  },
+  "tags": []
+}
