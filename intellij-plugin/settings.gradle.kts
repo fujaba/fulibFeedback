@@ -5,4 +5,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = "intellij-plugin"
+rootProject.name = "fulibFeedback"
