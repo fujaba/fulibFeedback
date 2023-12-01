@@ -14,7 +14,7 @@
     "vscode:prepublish": "cpx ../language-server/main.js ./server/"
   },
   "categories": [
-    "programming languages"
+    "Education"
   ],
   "identity": {
     "internalName": "org.fulib.feedback"
