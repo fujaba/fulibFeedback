@@ -6,21 +6,13 @@ VSCode extension and Jetbrains IDEs plugin for grading code assignments with ful
 
 ### IntelliJ
 
-1. Install the plugin from the [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/23254-fulibfeedback).
-2. Go to "Settings > Tools > fulibFeedback" and enter your full name. This is required for the plugin to figure out who you are.
-3. Open or create an Assignment on https://fulib.org/assignments
-4. Configure the plugin for use with the assignment:
-   1. Use the "Options > Configure fulibFeedback" action to configure the plugin automatically, **or**
-   2. Fill the fields `API Server`, `Assignment ID` and `Assignment Token` in the IDE under "Settings > Extensions > fulibFeedback".
+* Quick link: [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/23254-fulibfeedback)
+* More info: [IntelliJ ReadMe](intellij-plugin/README.md#setup)
 
 ### VSCode
 
-1. Install the extension from the [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=fulib.fulibFeedback).
-2. Go to "Settings > Extensions > fulibFeedback" and enter your full name. This is required for the plugin to figure out who you are.
-3. Open or create an Assignment on https://fulib.org/assignments
-4. Configure the plugin for use with the assignment:
-   1. Use the "Options > Configure fulibFeedback" action to configure the plugin automatically, **or**
-   2. Fill the fields `API Server`, `Assignment ID` and `Assignment Token` in the IDE under "Settings > Tools > fulibFeedback".
+* Quick link: [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=fulib.fulibFeedback)
+* More info: [VSCode ReadMe](apps/vscode-client/README.md#setup)
 
 ## Usage
 
