@@ -42,7 +42,7 @@ tasks {
   }
 
   prepareSandbox {
-    from("${rootDir}/../vscode-plugin/server/dist/main.js") {
+    from("${rootDir}/../dist/apps/language-server/main.js") {
       into("${project.name}/language-server")
     }
   }
