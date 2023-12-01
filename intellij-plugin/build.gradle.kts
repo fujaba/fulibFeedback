@@ -1,3 +1,7 @@
+import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
+import org.intellij.markdown.html.HtmlGenerator
+import org.intellij.markdown.parser.MarkdownParser
+
 plugins {
   id("java")
   id("org.jetbrains.kotlin.jvm") version "1.8.22"
@@ -5,7 +9,7 @@ plugins {
 }
 
 group = "org.fulib"
-version = "1.0-SNAPSHOT"
+version = "1.0.2"
 
 repositories {
   mavenCentral()
@@ -18,6 +22,13 @@ intellij {
   type.set("IU") // Target IDE Platform
 
   plugins.set(listOf("JavaScript"))
+}
+
+fun markdown(md: String): String {
+  val flavour = GFMFlavourDescriptor()
+  val parsedTree = MarkdownParser(flavour).buildMarkdownTreeFromString(md)
+  val html = HtmlGenerator(md, parsedTree, flavour).generateHtml()
+  return html
 }
 
 tasks {
@@ -39,6 +50,8 @@ tasks {
   patchPluginXml {
     sinceBuild.set("233")
     untilBuild.set("240.*")
+    pluginDescription.set(markdown(project.file("README.md").readText()))
+    changeNotes.set(markdown(project.file("CHANGELOG.md").readText()))
   }
 
   signPlugin {
