@@ -7,12 +7,12 @@ VSCode extension and Jetbrains IDEs plugin for grading code assignments with ful
 ### IntelliJ
 
 * Quick link: [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/23254-fulibfeedback)
-* More info: [IntelliJ ReadMe](intellij-plugin/README.md#setup)
+* More info: [ReadMe for IntelliJ](apps/intellij-plugin/README.md#setup)
 
 ### VSCode
 
 * Quick link: [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=fulib.fulibFeedback)
-* More info: [VSCode ReadMe](apps/vscode-client/README.md#setup)
+* More info: [ReadMe for VSCode](apps/vscode-client/README.md#setup)
 
 ## Usage
 
