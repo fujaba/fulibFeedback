@@ -6,7 +6,7 @@ VSCode extension and Jetbrains IDEs plugin for grading code assignments with ful
 
 ### IntelliJ
 
-1. Install the plugin from the [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=fulib.fulibFeedback).
+1. Install the plugin from the [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/23254-fulibfeedback).
 2. Go to "Settings > Tools > fulibFeedback" and enter your full name. This is required for the plugin to figure out who you are.
 3. Open or create an Assignment on https://fulib.org/assignments
 4. Configure the plugin for use with the assignment:
@@ -15,7 +15,7 @@ VSCode extension and Jetbrains IDEs plugin for grading code assignments with ful
 
 ### VSCode
 
-1. Install from [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/23254-fulibfeedback).
+1. Install the extension from the [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=fulib.fulibFeedback).
 2. Go to "Settings > Extensions > fulibFeedback" and enter your full name. This is required for the plugin to figure out who you are.
 3. Open or create an Assignment on https://fulib.org/assignments
 4. Configure the plugin for use with the assignment:
