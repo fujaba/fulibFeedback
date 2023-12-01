@@ -16,7 +16,11 @@
         "external": ["vscode"],
         "main": "apps/vscode-client/src/main.ts",
         "tsConfig": "apps/vscode-client/tsconfig.app.json",
-        "assets": ["apps/vscode-client/src/assets"],
+        "assets": [
+          "apps/vscode-client/src/assets",
+          "README.md",
+          "LICENSE.md"
+        ],
         "generatePackageJson": true,
         "esbuildOptions": {
           "sourcemap": true,

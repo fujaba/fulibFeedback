@@ -10,6 +10,9 @@
     "type": "git",
     "url": "https://github.com/fujaba/fulibFeedback"
   },
+  "scripts": {
+    "vscode:prepublish": "cpx ../language-server/main.js ./server/"
+  },
   "categories": [
     "programming languages"
   ],

@@ -27,8 +27,6 @@
       "configurations": {
         "development": {},
         "production": {
-          "outputPath": "dist/apps/vscode-client/server",
-          "generatePackageJson": false,
           "minify": true,
           "thirdParty": true,
           "esbuildOptions": {
