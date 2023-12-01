@@ -39,6 +39,8 @@ tasks {
   patchPluginXml {
     sinceBuild.set("233")
     untilBuild.set("240.*")
+    pluginDescription.set(project.file("README.md").readText())
+    changeNotes.set(project.file("CHANGELOG.md").readText())
   }
 
   signPlugin {
