@@ -42,7 +42,10 @@ export class AssignmentsApiService {
   }
 
   private getFileAndGithub(prefix: string, uri: string) {
-    const prefixIndex = uri.indexOf(prefix);
+    // Using lastIndexOf to handle the "gh classroom clone" case where there is a folder structure like
+    // <prefix>-submissions
+    // +- <prefix>-Student
+    const prefixIndex = uri.lastIndexOf(prefix);
     // This works for prefix-Student/ as well as prefix/Student/
     const usernameStart = prefixIndex + prefix.length + 1;
     const usernameEnd = uri.indexOf('/', usernameStart);
