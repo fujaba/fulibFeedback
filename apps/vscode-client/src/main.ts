@@ -1,4 +1,3 @@
-import * as path from 'path';
 import {ExtensionContext, ExtensionMode} from 'vscode';
 import {LanguageClient, LanguageClientOptions, ServerOptions, TransportKind} from 'vscode-languageclient/node';
 import {FeedbackProtocolHandler} from './protocol-handler';
