@@ -18,7 +18,7 @@ export class AssignmentsApiService {
       return {};
     }
 
-    const prefix = assignment.classroom.prefix;
+    const prefix = assignment.classroom?.prefix;
     if (prefix) {
       const {file, username} = this.getFileAndGithub(prefix, uri);
       const solution = await this.getSolution(config, `github:${username}`);
