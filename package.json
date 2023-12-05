@@ -5,6 +5,7 @@
   "scripts": {
     "vscode-client:build:watch": "nx run vscode-client:build:development --watch",
     "language-server:build:watch": "nx run language-server:build:development --watch",
+    "vscode": "code --extensionDevelopmentPath=$PWD/dist/apps/vscode-client/",
     "vscode:publish": "nx run-many -t build -p vscode-client language-server && cd dist/apps/vscode-client && vsce publish"
   },
   "private": true,
