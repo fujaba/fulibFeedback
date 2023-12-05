@@ -21,7 +21,7 @@ export class AssignmentsApiService {
     const prefix = assignment.classroom.prefix;
     if (prefix) {
       const {file, username} = this.getFileAndGithub(prefix, uri);
-      const solution = await this.getSolution(config, undefined, username);
+      const solution = await this.getSolution(config, `github:${username}`);
       return {assignment, solution, file};
     } else {
       const pathComponents = uri.split('/');
@@ -70,7 +70,7 @@ export class AssignmentsApiService {
     }).catch(() => undefined);
   }
 
-  async getSolution(config: Config, q?: string, github?: string): Promise<Solution | undefined> {
+  async getSolution(config: Config, q?: string): Promise<Solution | undefined> {
     if (config.solution.id) {
       return this.http<Solution>('GET', `${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions/${config.solution.id}`, undefined, {
         headers: this.getHeaders(config),
@@ -78,10 +78,7 @@ export class AssignmentsApiService {
     }
 
     return this.http<Solution[]>('GET', `${config.apiServer}/api/v1/assignments/${config.assignment.id}/solutions`, undefined, {
-      params: {
-        q,
-        'author.github': github,
-      },
+      params: {q},
       headers: this.getHeaders(config),
     }).then(([solution]) => solution, () => undefined);
   }
