@@ -1,3 +1,4 @@
-# v1.0.2
+# v1.0.3
 
-+ Correctly formatted plugin description and change notes.
+* Fixed missing language server.
+* Fixed incorrect solution detection for GitHub Classroom repositories.
