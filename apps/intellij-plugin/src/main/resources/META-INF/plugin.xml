@@ -26,7 +26,9 @@
       parentId="tools"
       instance="org.fulib.fulibFeedback.settings.AppSettingsConfigurable"
       id="org.fulib.fulibFeedback.settings.AppSettingsConfigurable"
-      displayName="fulibFeedback"/>
+      displayName="fulibFeedback"
+      dynamic="true"
+    />
     <jbProtocolCommand implementation="org.fulib.fulibFeedback.FeedbackJBProtocolCommand"/>
   </extensions>
 </idea-plugin>
