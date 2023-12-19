@@ -51,8 +51,12 @@ tasks {
   patchPluginXml {
     sinceBuild.set("233")
     untilBuild.set("240.*")
-    pluginDescription.set(markdown(project.file("README.md").readText()))
-    changeNotes.set(markdown(project.file("CHANGELOG.md").readText()))
+    pluginDescription.set(provider {
+      markdown(project.file("README.md").readText())
+    })
+    changeNotes.set(provider {
+      markdown(project.file("CHANGELOG.md").readText())
+    })
   }
 
   signPlugin {
