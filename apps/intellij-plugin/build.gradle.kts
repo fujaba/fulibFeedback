@@ -24,7 +24,8 @@ intellij {
   plugins.set(listOf("JavaScript"))
 }
 
-fun markdown(md: String): String {
+fun markdown(text: String): String {
+  val md = text.replace("\r", "")
   val flavour = GFMFlavourDescriptor()
   val parsedTree = MarkdownParser(flavour).buildMarkdownTreeFromString(md)
   val html = HtmlGenerator(md, parsedTree, flavour).generateHtml()
