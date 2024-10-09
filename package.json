@@ -26,11 +26,11 @@
     "@swc/core": "1.5.7",
     "@types/eventsource": "^1.1.15",
     "@types/jest": "29.5.13",
-    "@types/node": "18.19.9",
+    "@types/node": "22.7.5",
     "@types/vscode": "^1.94.0",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/parser": "7.18.0",
-    "@vscode/vsce": "^2.32.0",
+    "@vscode/vsce": "^3.1.1",
     "cpx": "^1.5.0",
     "esbuild": "^0.19.12",
     "eslint": "8.57.1",
@@ -40,7 +40,7 @@
     "nx": "20.0.0",
     "prettier": "^2.8.8",
     "ts-jest": "^29.2.5",
-    "ts-node": "10.9.1",
+    "ts-node": "10.9.2",
     "typescript": "5.5.4"
   },
   "dependencies": {
@@ -54,7 +54,7 @@
     "rxjs": "^7.8.1",
     "tslib": "^2.7.0",
     "vscode-languageclient": "^9.0.1",
-    "vscode-languageserver": "^8.1.0",
+    "vscode-languageserver": "^9.0.1",
     "vscode-languageserver-textdocument": "^1.0.12"
   }
 }
