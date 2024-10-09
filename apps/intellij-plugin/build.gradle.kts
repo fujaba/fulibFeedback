@@ -4,8 +4,10 @@ import org.intellij.markdown.parser.MarkdownParser
 
 plugins {
   id("java")
-  id("org.jetbrains.kotlin.jvm") version "1.8.22"
-  id("org.jetbrains.intellij") version "1.16.0"
+  // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.jvm
+  id("org.jetbrains.kotlin.jvm") version "1.9.25"
+  // https://plugins.gradle.org/plugin/org.jetbrains.intellij
+  id("org.jetbrains.intellij") version "1.17.4"
 }
 
 group = "org.fulib"
