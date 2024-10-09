@@ -52,7 +52,7 @@ tasks {
 
   patchPluginXml {
     sinceBuild.set("233")
-    untilBuild.set("240.*")
+    untilBuild.set("250.*")
     pluginDescription.set(provider {
       markdown(project.file("README.md").readText())
     })
