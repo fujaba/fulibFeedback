@@ -1,6 +1,5 @@
-# v1.0.4
+# v1.1.0
 
-* Support for GitHub Classroom "submissions" folder layout.
-* Minor robustness improvements for solution detection.
+* Added support for IntelliJ IDEA 2024.x.
 
 [All Releases on GitHub](https://github.com/fujaba/fulibFeedback/releases?q=intellij)
