@@ -1,13 +1,15 @@
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.intellij.markdown.html.HtmlGenerator
 import org.intellij.markdown.parser.MarkdownParser
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
+import org.jetbrains.intellij.platform.gradle.models.ProductRelease
 
 plugins {
   id("java")
   // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.jvm
-  id("org.jetbrains.kotlin.jvm") version "1.9.25"
-  // https://plugins.gradle.org/plugin/org.jetbrains.intellij
-  id("org.jetbrains.intellij") version "1.17.4"
+  id("org.jetbrains.kotlin.jvm") version "2.1.20"
+  // https://plugins.gradle.org/plugin/org.jetbrains.intellij.platform
+  id("org.jetbrains.intellij.platform") version "2.5.0"
 }
 
 group = "org.fulib"
@@ -15,15 +17,31 @@ version = "1.1.0"
 
 repositories {
   mavenCentral()
+  intellijPlatform {
+    defaultRepositories()
+  }
 }
 
-// Configure Gradle IntelliJ Plugin
-// Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
-intellij {
-  version.set("2023.3")
-  type.set("IU") // Target IDE Platform
+dependencies {
+  intellijPlatform {
+    intellijIdeaUltimate("2024.3")
+    // intellijIdeaUltimate("251.23774.318")
+    bundledPlugins("JavaScript")
+  }
+}
 
-  plugins.set(listOf("JavaScript"))
+tasks {
+  // https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-faq.html#how-to-check-the-latest-available-eap-release
+  printProductsReleases {
+    channels = listOf(ProductRelease.Channel.EAP)
+    types = listOf(IntelliJPlatformType.IntellijIdeaUltimate)
+    untilBuild = provider { null }
+
+    doLast {
+      val latestEap = productsReleases.get().max()
+      println("Latest EAP version: ${latestEap}")
+    }
+  }
 }
 
 fun markdown(text: String): String {
@@ -52,7 +70,7 @@ tasks {
 
   patchPluginXml {
     sinceBuild.set("233")
-    untilBuild.set("250.*")
+    untilBuild.set("252.*")
     pluginDescription.set(provider {
       markdown(project.file("README.md").readText())
     })
