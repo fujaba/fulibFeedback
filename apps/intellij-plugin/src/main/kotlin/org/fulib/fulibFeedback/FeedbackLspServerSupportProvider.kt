@@ -4,6 +4,7 @@ package org.fulib.fulibFeedback
 
 import com.intellij.execution.ExecutionException
 import com.intellij.execution.configurations.GeneralCommandLine
+import com.intellij.icons.AllIcons
 import com.intellij.javascript.nodejs.interpreter.NodeCommandLineConfigurator
 import com.intellij.javascript.nodejs.interpreter.NodeJsInterpreterManager
 import com.intellij.javascript.nodejs.interpreter.local.NodeJsLocalInterpreter
@@ -11,9 +12,12 @@ import com.intellij.javascript.nodejs.interpreter.wsl.WslNodeInterpreter
 import com.intellij.lang.javascript.service.JSLanguageServiceUtil
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.platform.lsp.api.LspServer
 import com.intellij.platform.lsp.api.LspServerSupportProvider
 import com.intellij.platform.lsp.api.ProjectWideLspServerDescriptor
+import com.intellij.platform.lsp.api.lsWidget.LspServerWidgetItem
 import org.eclipse.lsp4j.ConfigurationItem
+import org.fulib.fulibFeedback.settings.AppSettingsConfigurable
 import org.fulib.fulibFeedback.settings.AppSettingsState
 
 class FeedbackLspServerSupportProvider : LspServerSupportProvider {
@@ -23,6 +27,16 @@ class FeedbackLspServerSupportProvider : LspServerSupportProvider {
 
     serverStarter.ensureServerStarted(FeedbackLspServerDescriptor(project))
   }
+
+  override fun createLspServerWidgetItem(
+    lspServer: LspServer,
+    currentFile: VirtualFile?
+  ) =
+    LspServerWidgetItem(
+      lspServer, currentFile,
+      AllIcons.Diff.GutterCheckBoxSelected,
+      AppSettingsConfigurable::class.java
+    )
 }
 
 private class FeedbackLspServerDescriptor(project: Project) : ProjectWideLspServerDescriptor(project, "fulibFeedback") {
