@@ -5,7 +5,7 @@ import {Assignment, Task} from './assignment';
 import {Evaluation} from './evaluation';
 import {CreateSelectionDto, SelectionDto} from './selection';
 import {Solution} from './solution';
-import {default as EventSource} from 'eventsource';
+import {EventSource} from 'eventsource';
 
 export class AssignmentsApiService {
   async getContext(config: Config, uri: string) {
