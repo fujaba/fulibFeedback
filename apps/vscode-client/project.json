@@ -31,7 +31,9 @@
         }
       },
       "configurations": {
-        "development": {},
+        "development": {
+          "thirdParty": true
+        },
         "production": {
           "minify": true,
           "thirdParty": true,
