@@ -11,7 +11,7 @@
     "url": "https://github.com/fujaba/fulibFeedback"
   },
   "scripts": {
-    "vscode:prepublish": "cpx ../language-server/main.js ./server/"
+    "vscode:prepublish": "cp ../language-server/main.js server.js"
   },
   "categories": [
     "Education"
