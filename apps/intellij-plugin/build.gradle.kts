@@ -3,13 +3,14 @@ import org.intellij.markdown.html.HtmlGenerator
 import org.intellij.markdown.parser.MarkdownParser
 import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.models.ProductRelease
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
   id("java")
   // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.jvm
-  id("org.jetbrains.kotlin.jvm") version "2.1.20"
+  id("org.jetbrains.kotlin.jvm") version "2.2.20"
   // https://plugins.gradle.org/plugin/org.jetbrains.intellij.platform
-  id("org.jetbrains.intellij.platform") version "2.5.0"
+  id("org.jetbrains.intellij.platform") version "2.9.0"
 }
 
 group = "org.fulib"
@@ -24,7 +25,7 @@ repositories {
 
 dependencies {
   intellijPlatform {
-    intellijIdeaUltimate("2024.3")
+    intellijIdeaUltimate("2025.2")
     // intellijIdeaUltimate("251.23774.318")
     bundledPlugins("JavaScript")
   }
@@ -59,7 +60,7 @@ tasks {
     targetCompatibility = "17"
   }
   withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions.jvmTarget = "17"
+    compilerOptions.jvmTarget = JvmTarget.JVM_17
   }
 
   prepareSandbox {
@@ -70,7 +71,7 @@ tasks {
 
   patchPluginXml {
     sinceBuild.set("241")
-    untilBuild.set("252.*")
+    untilBuild.set("253.*")
     pluginDescription.set(provider {
       markdown(project.file("README.md").readText())
     })
