@@ -18,9 +18,9 @@ updates:
       - dependency-name: "nx"
       - dependency-name: "@nx/*"
       - dependency-name: "@nestjs/*"
-        update-types: ["major"]
+        update-types: ["version-update:semver-major"]
       - dependency-name: "@angular/*"
-        update-types: ["major"]
+        update-types: ["version-update:semver-major"]
     groups:
       production:
         dependency-type: production
