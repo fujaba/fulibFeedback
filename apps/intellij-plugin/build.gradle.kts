@@ -10,7 +10,7 @@ plugins {
   // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.jvm
   id("org.jetbrains.kotlin.jvm") version "2.2.20"
   // https://plugins.gradle.org/plugin/org.jetbrains.intellij.platform
-  id("org.jetbrains.intellij.platform") version "2.9.0"
+  id("org.jetbrains.intellij.platform") version "2.10.3"
 }
 
 group = "org.fulib"
