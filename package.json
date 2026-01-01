@@ -13,13 +13,14 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "@nestjs/core",
+      "@swc/core",
       "@vscode/vsce-sign",
       "esbuild",
       "nx"
     ]
   },
   "devDependencies": {
-    "@nestjs/schematics": "11.0.7",
+    "@nestjs/schematics": "11.0.9",
     "@nestjs/testing": "^11.1.11",
     "@nx/esbuild": "22.3.3",
     "@nx/eslint": "22.3.3",
@@ -31,7 +32,7 @@
     "@nx/webpack": "22.3.3",
     "@nx/workspace": "22.3.3",
     "@swc-node/register": "1.11.1",
-    "@swc/core": "1.13.5",
+    "@swc/core": "1.15.8",
     "@types/jest": "30.0.0",
     "@types/node": "24.5.2",
     "@types/vscode": "^1.107.0",
@@ -39,17 +40,17 @@
     "@typescript-eslint/parser": "7.18.0",
     "@typescript-eslint/utils": "^8.51.0",
     "@vscode/vsce": "^3.7.1",
-    "esbuild": "^0.25.12",
+    "esbuild": "^0.27.2",
     "eslint": "8.57.1",
     "eslint-config-prettier": "10.1.8",
-    "jest": "30.1.3",
+    "jest": "30.2.0",
     "jest-environment-node": "^30.2.0",
-    "jest-util": "~30.0.5",
+    "jest-util": "~30.2.0",
     "nx": "22.3.3",
     "prettier": "^2.8.8",
-    "ts-jest": "29.4.4",
+    "ts-jest": "29.4.6",
     "ts-node": "10.9.2",
-    "typescript": "5.9.2"
+    "typescript": "5.9.3"
   },
   "dependencies": {
     "@nestjs/axios": "^4.0.1",
