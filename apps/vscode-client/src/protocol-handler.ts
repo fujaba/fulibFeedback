@@ -25,7 +25,7 @@ export class FeedbackProtocolHandler implements UriHandler, Disposable {
     const {assignment, solution, token, api_server} = data;
     const config = vscode.workspace.getConfiguration('fulibFeedback');
     const target = solution ? ConfigurationTarget.Workspace : ConfigurationTarget.Global;
-    let changed: string[] = [];
+    const changed: string[] = [];
     if (api_server) {
       config.update('apiServer', api_server, target);
       changed.push('API Server: ' + api_server);
@@ -67,7 +67,7 @@ export class FeedbackProtocolHandler implements UriHandler, Disposable {
   }
 
   dispose(): void {
-    for (let disposable of this.disposables) {
+    for (const disposable of this.disposables) {
       disposable.dispose();
     }
     this.disposables = [];
