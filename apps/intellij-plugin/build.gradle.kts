@@ -25,8 +25,7 @@ repositories {
 
 dependencies {
   intellijPlatform {
-    intellijIdeaUltimate("2025.2")
-    // intellijIdeaUltimate("251.23774.318")
+    intellijIdeaUltimate("2025.3")
     bundledPlugins("JavaScript")
   }
 }
@@ -71,7 +70,7 @@ tasks {
 
   patchPluginXml {
     sinceBuild.set("241")
-    untilBuild.set("253.*")
+    untilBuild.set("254.*")
     pluginDescription.set(provider {
       markdown(project.file("README.md").readText())
     })
