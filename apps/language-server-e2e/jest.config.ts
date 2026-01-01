@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default {
   displayName: 'language-server-e2e',
   preset: '../../jest.preset.js',
