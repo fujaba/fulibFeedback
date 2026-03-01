@@ -8,7 +8,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
   id("java")
   // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.jvm
-  id("org.jetbrains.kotlin.jvm") version "2.3.0"
+  id("org.jetbrains.kotlin.jvm") version "2.3.10"
   // https://plugins.gradle.org/plugin/org.jetbrains.intellij.platform
   id("org.jetbrains.intellij.platform") version "2.11.0"
 }
