@@ -8,9 +8,9 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
   id("java")
   // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.jvm
-  id("org.jetbrains.kotlin.jvm") version "2.3.10"
+  id("org.jetbrains.kotlin.jvm") version "2.3.20"
   // https://plugins.gradle.org/plugin/org.jetbrains.intellij.platform
-  id("org.jetbrains.intellij.platform") version "2.11.0"
+  id("org.jetbrains.intellij.platform") version "2.13.1"
 }
 
 group = "org.fulib"
@@ -25,7 +25,7 @@ repositories {
 
 dependencies {
   intellijPlatform {
-    intellijIdeaUltimate("2025.3")
+    intellijIdeaUltimate("2026.1")
     bundledPlugins("JavaScript")
   }
 }
@@ -70,7 +70,7 @@ tasks {
 
   patchPluginXml {
     sinceBuild.set("241")
-    untilBuild.set("254.*")
+    untilBuild.set("262.*")
     pluginDescription.set(provider {
       markdown(project.file("README.md").readText())
     })

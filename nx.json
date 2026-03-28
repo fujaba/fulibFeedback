@@ -44,5 +44,6 @@
     "sharedGlobals": []
   },
   "useInferencePlugins": false,
+  "analytics": false,
   "defaultBase": "master"
 }
