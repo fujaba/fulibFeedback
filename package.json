@@ -68,5 +68,10 @@
     "vscode-languageclient": "^9.0.1",
     "vscode-languageserver": "^9.0.1",
     "vscode-languageserver-textdocument": "^1.0.12"
+  },
+  "resolutions": {
+    "ajv@^8": "^8.18.0",
+    "path-to-regexp@^8": "^8.4.0",
+    "picomatch@^4": "^4.0.4"
   }
 }
