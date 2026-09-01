@@ -11,7 +11,7 @@ buildscript {
   }
 
   dependencies {
-    classpath("org.jetbrains:markdown:0.7.8")
+    classpath("org.jetbrains:markdown:0.7.9")
   }
 }
 
